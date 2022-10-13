@@ -1,40 +1,40 @@
-<img src="https://raw.githubusercontent.com/gabrieldemarmiesse/python-on-whales/master/img/full.png" alt="logo" class="responsive" style="width: 80%; height: auto;">
+<img src="https://raw.githubusercontent.com/duckietown/pydock/master/img/full.png" alt="logo" class="responsive" style="width: 80%; height: auto;">
 
 A Docker client for Python, designed to be fun and intuitive!
 
 Works on Linux, macOS and Windows, for Python 3.7 and above. 
 
-The docs can be found at this address: <https://gabrieldemarmiesse.github.io/python-on-whales/>
+The docs can be found at this address: <https://duckietown.github.io/pydock/>
 
-The GitHub repo can be found at this address: <https://github.com/gabrieldemarmiesse/python-on-whales>
+The GitHub repo can be found at this address: <https://github.com/duckietown/pydock>
 
 
 ## How to install?
 
 ```bash
-pip install python-on-whales
+pip install pydock
 ```
 
 ## Some cool examples
 
 Start by doing
 ```python
-from python_on_whales import docker
+from pydock import docker
 ```
 and then:
 
-* `docker run hello-world` -> [`docker.run("hello-world")`](https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/container/#run)
-* `docker pull ubuntu` -> [`docker.pull("ubuntu")`](https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/image/#pull)
-* `docker build ./` -> [`docker.build("./")`](https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/buildx/#build)
-* `docker compose up my_service` -> [`docker.compose.up(["my_service"])`](https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/compose/#up)
-* `docker image ls` -> [`docker.image.list()`](https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/image/#list)
-* `docker ps` -> [`docker.ps()`](https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/container/#list)
-* `docker cp` -> [`docker.copy()`](https://gabrieldemarmiesse.github.io/python-on-whales/sub-commands/container/#copy)
+* `docker run hello-world` -> [`docker.run("hello-world")`](https://duckietown.github.io/pydock/sub-commands/container/#run)
+* `docker pull ubuntu` -> [`docker.pull("ubuntu")`](https://duckietown.github.io/pydock/sub-commands/image/#pull)
+* `docker build ./` -> [`docker.build("./")`](https://duckietown.github.io/pydock/sub-commands/buildx/#build)
+* `docker compose up my_service` -> [`docker.compose.up(["my_service"])`](https://duckietown.github.io/pydock/sub-commands/compose/#up)
+* `docker image ls` -> [`docker.image.list()`](https://duckietown.github.io/pydock/sub-commands/image/#list)
+* `docker ps` -> [`docker.ps()`](https://duckietown.github.io/pydock/sub-commands/container/#list)
+* `docker cp` -> [`docker.copy()`](https://duckietown.github.io/pydock/sub-commands/container/#copy)
 
 You get the idea 🙂 it's the same as the CLI we all know and love.
 
 ```python
->>> from python_on_whales import docker
+>>> from pydock import docker
 
 >>> output = docker.run("hello-world")
 >>> print(output)
@@ -47,7 +47,7 @@ This message shows that your installation appears to be working correctly.
 
 
 ```python
->>> from python_on_whales import docker
+>>> from pydock import docker
 >>> print(docker.run("nvidia/cuda:11.0-base", ["nvidia-smi"], gpus="all"))
 +-----------------------------------------------------------------------------+
 | NVIDIA-SMI 450.51.06    Driver Version: 450.51.06    CUDA Version: 11.0     |
@@ -71,7 +71,7 @@ This message shows that your installation appears to be working correctly.
 ```
 
 ```python
->>> from python_on_whales import docker
+>>> from pydock import docker
 >>> my_docker_image = docker.pull("ubuntu:20.04")
 20.04: Pulling from library/ubuntu
 e6ca3592b144: Downloading [=============>                                     ]  7.965MB/28.56MB
@@ -82,13 +82,13 @@ e6ca3592b144: Downloading [=============>                                     ] 
 ['ubuntu:20.04']
 
 >>> docker.image.list()
-[python_on_whales.Image(id='sha256:1a437e363abfa', tags=['ubuntu:20.04'])]
+[pydock.Image(id='sha256:1a437e363abfa', tags=['ubuntu:20.04'])]
 
 >>> my_docker_image.remove()
 ```
 
 ```python
->>> from python_on_whales import docker
+>>> from pydock import docker
 >>> my_image = docker.build(".", tags="some_name")  # uses Buildx/buildkit by default
 [+] Building 1.6s (17/17) FINISHED
  => [internal] load build definition from Dockerfile                                                            0.0s
@@ -107,7 +107,7 @@ e6ca3592b144: Downloading [=============>                                     ] 
  => CACHED [tests_ubuntu_install_without_buildx 2/7] RUN curl -fsSL https://download.docker.com/linux/ubuntu/g  0.0s
  => CACHED [tests_ubuntu_install_without_buildx 3/7] RUN add-apt-repository    "deb [arch=amd64] https://downl  0.0s
  => CACHED [tests_ubuntu_install_without_buildx 4/7] RUN  apt-get update &&      apt-get install -y docker-ce-  0.0s
- => CACHED [tests_ubuntu_install_without_buildx 5/7] WORKDIR /python-on-whales                                  0.0s
+ => CACHED [tests_ubuntu_install_without_buildx 5/7] WORKDIR /pydock                                  0.0s
  => CACHED [tests_ubuntu_install_without_buildx 6/7] COPY . .                                                   0.0s
  => CACHED [tests_ubuntu_install_without_buildx 7/7] RUN pip install -e .                                       0.0s
  => exporting to image                                                                                          0.1s
@@ -123,7 +123,7 @@ docker run --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -d postgre
 ```
 becomes
 ```python
-from python_on_whales import docker
+from pydock import docker
 
 docker.run(
     "postgres:9.6",
@@ -132,7 +132,7 @@ docker.run(
     detach=True,
 )
 print(docker.ps())
-# [python_on_whales.Container(id='f5fb939c409d', name='some-postgres')]
+# [pydock.Container(id='f5fb939c409d', name='some-postgres')]
 ```
 
 -----
@@ -142,7 +142,7 @@ docker run -it --rm --network some-network postgres psql -h some-postgres -U pos
 ```
 becomes
 ```python
-from python_on_whales import docker
+from pydock import docker
 
 # since it's interactive, you'll be dropped into the psql shell. The python code
 # will continue only after you exit the shell.
@@ -163,7 +163,7 @@ docker run -d --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -e PGDA
 ```
 becomes
 ```python
-from python_on_whales import docker
+from pydock import docker
 
 docker.run(
     "postgres:9.6",
@@ -194,7 +194,7 @@ attributes are updated in real-time!
 context, the Docker object is removed automatically, even if an exception occurs.
 * A fully typed API (Mypy and IDE-friendly) compatible with `pathlib` and `os.path`
 * All Docker objects and the Docker client are safe to use with multithreading and multiprocessing.
-* Display the commands called and the environment variables used by setting the environment variable `PYTHON_ON_WHALES_DEBUG=1`.
+* Display the commands called and the environment variables used by setting the environment variable `PYDOCK_DEBUG=1`.
 
 ## Why another project? Why not build on Docker-py?
 
@@ -204,12 +204,12 @@ could not be the same.
 
 Two major differences do not permit that:
 
-1) The API is quite different. The aim of Python on Whales is to provide a 1-to-1 
+1) The API is quite different. The aim of Pydock is to provide a 1-to-1 
 mapping between the Docker command line and Python, so that users don't even have 
 to open the docs to do write code.
 
 2) While [Docker-py](https://docker-py.readthedocs.io/en/stable/) is a complete re-implementation of the Docker client binary 
-(written in Go), Python on whales sits on top of the Docker client binary, which makes 
+(written in Go), Pydock sits on top of the Docker client binary, which makes 
 implementing new features much easier and safer. For example, it's 
 [unlikely that docker-py supports Buildx/buildkit](https://github.com/docker/docker-py/issues/2230#issuecomment-454344497)
 anytime soon because rewriting a large Go codebase in Python is hard work.
@@ -218,12 +218,12 @@ anytime soon because rewriting a large Go codebase in Python is hard work.
 ![](./img/docker_clients.png)
 
 
-## Should I use Docker-py or Python on Whales?
+## Should I use Docker-py or Pydock?
 
 Well, it's written in each project's description!
 
 * Docker-py: A Python library for the Docker Engine API
-* Python on whales: An awesome Python wrapper for an awesome Docker CLI
+* Pydock: An awesome Python wrapper for an awesome Docker CLI
 
 
 If you need to talk to the Docker engine directly, you need to do low level operations,
@@ -233,9 +233,9 @@ If you don't want to depend on the Docker CLI binary (~50MB), use docker-py.
 
 
 If you wanted to call the docker command line from Python, 
-do high level operations, use Python on Whales.
+do high level operations, use Pydock.
 For example if you want to write your CI logic in Python rather than in bash (a very good choice 😉).
-Some commands are only available in Python on whales 
+Some commands are only available in Pydock 
 too: `docker.buildx.build(...)`, `docker.stack.deploy(...)`...
 
 Use the right tool for the right job 🙂
@@ -266,12 +266,12 @@ Take those numbers with a grain of salt. The functions don't all need the same a
 
 ## Alternatives to Docker: Podman, nerdctl...
 
-Support for Docker-compatible clients like [Podman](https://podman.io/) and [Nerdctl](https://github.com/containerd/nerdctl) was introduced in Python-on-whales version 0.44.0.
+Support for Docker-compatible clients like [Podman](https://podman.io/) and [Nerdctl](https://github.com/containerd/nerdctl) was introduced in Pydock version 0.44.0.
 
-You can use an arbitrary binary to execute Docker commands by using the argument `client_call` of `python_on_whales.DockerCLient`.
+You can use an arbitrary binary to execute Docker commands by using the argument `client_call` of `pydock.DockerCLient`.
 Here is an example:
 ```python
->>> from python_on_whales import DockerClient
+>>> from pydock import DockerClient
 
 >>> nerdctl = DockerClient(client_call=["nerdctl"])
 
@@ -291,13 +291,13 @@ layer-sha256:6aefca2dc61dcbcd268b8a9861e552f9cdb69e57242faec64ac120d2355a9c1a:  
 layer-sha256:32a180f5cf85702e7680719c40c39c07972b1176355df5a621de9eb87ad07ce2:    done           |++++++++++++++++++++++++++++++++++++++|
 elapsed: 35.9s                                                                    total:  333.5  (9.3 MiB/s)
 
-python_on_whales.Image(id='sha256:f033692e2c5ab', tags=['python:3.9'])
+pydock.Image(id='sha256:f033692e2c5ab', tags=['python:3.9'])
 ```
 
 You can do something similar with podman:
 
 ```python
-from python_on_whales import DockerClient
+from pydock import DockerClient
 
 podman = DockerClient(client_call=["podman"])
 
@@ -316,4 +316,4 @@ Any and all PRs are welcome. Please see [this documentation](./CONTRIBUTING.md).
 
 It's a MIT license, so quite permissive.
 
-The license can be found [in the git repository](https://github.com/gabrieldemarmiesse/python-on-whales/blob/master/LICENSE).
+The license can be found [in the git repository](https://github.com/duckietown/pydock/blob/master/LICENSE).

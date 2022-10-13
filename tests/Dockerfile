@@ -3,6 +3,7 @@ FROM busybox as get_buildx
 RUN wget -O /docker-buildx https://github.com/docker/buildx/releases/download/v0.6.0/buildx-v0.6.0.linux-amd64
 RUN chmod a+x /docker-buildx
 
+
 #-----------------------------------------------------------------------------
 FROM busybox as get_compose
 
@@ -22,11 +23,12 @@ RUN pip install -r /tmp/test-requirements.txt -r /tmp/requirements.txt
 
 #-----------------------------------------------------------------------------
 FROM python_dependencies as lint
-WORKDIR /python-on-whales
+WORKDIR /pydock
 COPY . .
 RUN flake8
 RUN isort --check ./
 RUN black --check ./
+
 
 #-----------------------------------------------------------------------------
 FROM python_dependencies as tests_with_binaries
@@ -34,13 +36,12 @@ COPY --from=docker:20.10 /usr/local/bin/docker /usr/bin/
 COPY --from=get_buildx /docker-buildx /root/.docker/cli-plugins/
 COPY --from=get_compose /docker-compose /root/.docker/cli-plugins/
 
-WORKDIR /python-on-whales
+WORKDIR /pydock
 ENV HOME=/root
 
 COPY . .
 
 RUN pip install -e .
-
 
 CMD pytest -v --durations=10 ./tests
 
@@ -50,9 +51,9 @@ FROM python_dependencies as tests_without_any_binary
 
 COPY --from=get_buildx /docker-buildx /root/.docker/cli-plugins/
 
-WORKDIR /python-on-whales
+WORKDIR /pydock
 COPY . .
 
 RUN pip install -e .
 
-CMD pytest -v --durations=10 ./tests/python_on_whales/components/buildx
+CMD pytest -v --durations=10 ./tests/pydock/components/buildx

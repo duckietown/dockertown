@@ -1,6 +1,6 @@
-# Contributing to Python-on-whales
+# Contributing to Pydock
 
-You want to make Python-on-whales better? Great! Help is always welcomed!
+You want to make Pydock better? Great! Help is always welcomed!
 
 In this document, we'll try to explain how this package works internally and how you can 
 contribute to it.
@@ -12,7 +12,7 @@ how to open a pull request in a github repository that you don't own.
 ## Building the docs
 
 All docstring are fetched and put in templates. Everything is done in markdown, 
-with the help of [keras-autodoc](https://gabrieldemarmiesse.github.io/keras-autodoc/) and
+with the help of [keras-autodoc](https://duckietown.github.io/keras-autodoc/) and
 [mkdocs](https://www.mkdocs.org/).
 
 #### First install the dependencies:
@@ -34,7 +34,7 @@ http://localhost:8000
 
 ## Running the tests
 
-Install all dependencies and install python-on-whales in editable mode:
+Install all dependencies and install pydock in editable mode:
 ```
 pip install -r requirements.txt -r tests/test-requirements.txt
 pip install -e ./
@@ -49,7 +49,7 @@ pytest -v ./tests/
 
 ## Exploring the codebase
 
-The sources are in the `python_on_whales` directory. Everytime a class has something to 
+The sources are in the `pydock` directory. Everytime a class has something to 
 do with the Docker daemon, a `client_config` attribute is there and must be passed around.
 
 This `client_config` tells the Docker CLI how to connect to the daemon. 
@@ -64,10 +64,10 @@ The structure is the following for calling `docker image ...`.
 
 `ImageCLI` is in charge of calling the `docker image` commande. This class appears when you call
 ```python
-from python_on_whales import docker
+from pydock import docker
 print(docker.image)
 ```
-`ImageCLI` is in `python_on_whales/components/image/cli_wrapper.py`.
+`ImageCLI` is in `pydock/components/image/cli_wrapper.py`.
 
 `Image` is in charge of holding all the metadata of a Docker image and has all 
 the attributes that you could find by doing `docker image inspect ...`.
@@ -75,7 +75,7 @@ the attributes that you could find by doing `docker image inspect ...`.
 It has some methods for convenience. For example:
 
 ```python
-from python_on_whales import docker
+from pydock import docker
 
 my_ubuntu = docker.pull("ubuntu")
 
@@ -85,4 +85,4 @@ docker.image.remove(my_ubuntu)
 ```
 
 Since `Image` has all the information you can find with `docker image inspect ...`, we need 
-to parse the json output. All parsing models are found in `python_on_whales/components/image/models.py`.
+to parse the json output. All parsing models are found in `pydock/components/image/models.py`.

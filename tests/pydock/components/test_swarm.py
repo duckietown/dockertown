@@ -2,8 +2,8 @@ from datetime import timedelta
 
 import pytest
 
-from python_on_whales import docker
-from python_on_whales.exceptions import NotASwarmManager
+from pydock import docker
+from pydock.exceptions import NotASwarmManager
 
 
 @pytest.mark.usefixtures("swarm_mode")

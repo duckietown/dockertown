@@ -1,7 +1,7 @@
 import pytest
 
-from python_on_whales import docker
-from python_on_whales.exceptions import DockerException
+from pydock import docker
+from pydock.exceptions import DockerException
 
 
 def test_exception_attributes():

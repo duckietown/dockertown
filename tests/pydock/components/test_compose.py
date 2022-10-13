@@ -7,22 +7,20 @@ from pathlib import Path
 import pytest
 import pytz
 
-import python_on_whales
-from python_on_whales import DockerClient
-from python_on_whales.components.compose.models import ComposeConfig
-from python_on_whales.exceptions import NoSuchImage
-from python_on_whales.test_utils import get_all_jsons
-from python_on_whales.utils import PROJECT_ROOT
+import pydock
+from pydock import DockerClient
+from pydock.components.compose.models import ComposeConfig
+from pydock.exceptions import NoSuchImage
+from pydock.test_utils import get_all_jsons
+from pydock.utils import PROJECT_ROOT
 
 pytestmark = pytest.mark.skipif(
-    not python_on_whales.docker.compose.is_installed(),
+    not pydock.docker.compose.is_installed(),
     reason="Those tests need docker compose.",
 )
 
 docker = DockerClient(
-    compose_files=[
-        PROJECT_ROOT / "tests/python_on_whales/components/dummy_compose.yml"
-    ],
+    compose_files=[PROJECT_ROOT / "tests/pydock/components/dummy_compose.yml"],
     compose_compatibility=True,
 )
 
@@ -84,9 +82,7 @@ def test_push_empty_list_of_services():
 
 def test_compose_project_name():
     docker = DockerClient(
-        compose_files=[
-            PROJECT_ROOT / "tests/python_on_whales/components/dummy_compose.yml"
-        ],
+        compose_files=[PROJECT_ROOT / "tests/pydock/components/dummy_compose.yml"],
         compose_project_name="dudu",
         compose_compatibility=True,
     )
@@ -117,8 +113,7 @@ def test_docker_compose_build_with_arguments():
 def test_docker_compose_up_down():
     docker = DockerClient(
         compose_files=[
-            PROJECT_ROOT
-            / "tests/python_on_whales/components/dummy_compose_ends_quickly.yml"
+            PROJECT_ROOT / "tests/pydock/components/dummy_compose_ends_quickly.yml"
         ],
         compose_compatibility=True,
     )
@@ -306,7 +301,7 @@ def test_docker_compose_pull_ignore_pull_failures():
     docker = DockerClient(
         compose_files=[
             PROJECT_ROOT
-            / "tests/python_on_whales/components/dummy_compose_non_existent_image.yml"
+            / "tests/pydock/components/dummy_compose_non_existent_image.yml"
         ]
     )
     try:
@@ -328,8 +323,7 @@ def test_docker_compose_pull_include_deps():
 def test_docker_compose_up_abort_on_container_exit():
     docker = DockerClient(
         compose_files=[
-            PROJECT_ROOT
-            / "tests/python_on_whales/components/dummy_compose_ends_quickly.yml"
+            PROJECT_ROOT / "tests/pydock/components/dummy_compose_ends_quickly.yml"
         ],
         compose_compatibility=True,
     )
@@ -344,8 +338,7 @@ def test_passing_env_files(tmp_path: Path):
     compose_env_file.write_text("SOME_VARIABLE_TO_INSERT=hello\n")
     docker = DockerClient(
         compose_files=[
-            PROJECT_ROOT
-            / "tests/python_on_whales/components/dummy_compose_ends_quickly.yml"
+            PROJECT_ROOT / "tests/pydock/components/dummy_compose_ends_quickly.yml"
         ],
         compose_env_file=compose_env_file,
         compose_compatibility=True,
@@ -364,8 +357,7 @@ def test_project_directory_env_files(tmp_path: Path):
     project_env_file_two.write_text("TEST=two\n")
     docker = DockerClient(
         compose_files=[
-            PROJECT_ROOT
-            / "tests/python_on_whales/components/dummy_compose_project_directory.yml"
+            PROJECT_ROOT / "tests/pydock/components/dummy_compose_project_directory.yml"
         ],
         compose_project_directory=tmp_path,
         compose_compatibility=True,
@@ -382,9 +374,7 @@ def test_entrypoint_loaded_in_config():
 
 def test_config_complexe_compose():
     """Checking that the pydantic model does its job"""
-    compose_file = (
-        PROJECT_ROOT / "tests/python_on_whales/components/complexe-compose.yml"
-    )
+    compose_file = PROJECT_ROOT / "tests/pydock/components/complexe-compose.yml"
     docker = DockerClient(compose_files=[compose_file], compose_compatibility=True)
     config = docker.compose.config()
 
@@ -423,9 +413,7 @@ def test_config_complexe_compose():
 
 
 def test_compose_down_volumes():
-    compose_file = (
-        PROJECT_ROOT / "tests/python_on_whales/components/complexe-compose.yml"
-    )
+    compose_file = PROJECT_ROOT / "tests/pydock/components/complexe-compose.yml"
     docker = DockerClient(compose_files=[compose_file], compose_compatibility=True)
     docker.compose.up(
         ["my_service"], detach=True, scales=dict(my_service=1), build=True
@@ -472,9 +460,7 @@ def test_compose_version():
 
 def test_compose_logs_simple_use_case():
     docker = DockerClient(
-        compose_files=[
-            PROJECT_ROOT / "tests/python_on_whales/components/compose_logs.yml"
-        ],
+        compose_files=[PROJECT_ROOT / "tests/pydock/components/compose_logs.yml"],
         compose_compatibility=True,
     )
     docker.compose.up(detach=True)
@@ -489,9 +475,7 @@ def test_compose_logs_simple_use_case():
 
 def test_compose_logs_stream():
     docker = DockerClient(
-        compose_files=[
-            PROJECT_ROOT / "tests/python_on_whales/components/compose_logs.yml"
-        ],
+        compose_files=[PROJECT_ROOT / "tests/pydock/components/compose_logs.yml"],
         compose_compatibility=True,
     )
     docker.compose.up(detach=True)
@@ -508,9 +492,7 @@ def test_compose_logs_stream():
 
 def test_compose_logs_follow():
     docker = DockerClient(
-        compose_files=[
-            PROJECT_ROOT / "tests/python_on_whales/components/compose_logs.yml"
-        ],
+        compose_files=[PROJECT_ROOT / "tests/pydock/components/compose_logs.yml"],
         compose_compatibility=True,
     )
     docker.compose.up(detach=True)
@@ -547,9 +529,7 @@ def test_compose_logs_follow():
 @pytest.mark.parametrize("privileged", [True, False])
 def test_compose_execute_no_tty(privileged):
     docker = DockerClient(
-        compose_files=[
-            PROJECT_ROOT / "tests/python_on_whales/components/dummy_compose.yml"
-        ],
+        compose_files=[PROJECT_ROOT / "tests/pydock/components/dummy_compose.yml"],
         compose_compatibility=True,
     )
     docker.compose.up(["busybox"], detach=True)
@@ -562,14 +542,12 @@ def test_compose_execute_no_tty(privileged):
 
 
 # We can't test the TTY flag on execute because we can't have a true tty in pytest
-# of course tty still works if python-on-whales is executed outside pytest.
+# of course tty still works if pydock is executed outside pytest.
 
 
 def test_compose_execute_detach():
     docker = DockerClient(
-        compose_files=[
-            PROJECT_ROOT / "tests/python_on_whales/components/dummy_compose.yml"
-        ],
+        compose_files=[PROJECT_ROOT / "tests/pydock/components/dummy_compose.yml"],
         compose_compatibility=True,
     )
     docker.compose.up(["busybox"], detach=True)
@@ -583,9 +561,7 @@ def test_compose_execute_detach():
 
 def test_compose_execute_envs():
     docker = DockerClient(
-        compose_files=[
-            PROJECT_ROOT / "tests/python_on_whales/components/dummy_compose.yml"
-        ],
+        compose_files=[PROJECT_ROOT / "tests/pydock/components/dummy_compose.yml"],
         compose_compatibility=True,
     )
     docker.compose.up(["busybox"], detach=True)
@@ -601,9 +577,7 @@ def test_compose_execute_envs():
 
 def test_compose_execute_user():
     docker = DockerClient(
-        compose_files=[
-            PROJECT_ROOT / "tests/python_on_whales/components/dummy_compose.yml"
-        ],
+        compose_files=[PROJECT_ROOT / "tests/pydock/components/dummy_compose.yml"],
         compose_compatibility=True,
     )
     docker.compose.up(["busybox"], detach=True)
@@ -614,9 +588,7 @@ def test_compose_execute_user():
 
 def test_compose_execute_workdir():
     docker = DockerClient(
-        compose_files=[
-            PROJECT_ROOT / "tests/python_on_whales/components/dummy_compose.yml"
-        ],
+        compose_files=[PROJECT_ROOT / "tests/pydock/components/dummy_compose.yml"],
         compose_compatibility=True,
     )
     docker.compose.up(["busybox"], detach=True)
@@ -632,9 +604,7 @@ def test_compose_execute_workdir():
 
 def test_compose_single_profile():
     docker = DockerClient(
-        compose_files=[
-            PROJECT_ROOT / "tests/python_on_whales/components/dummy_compose.yml"
-        ],
+        compose_files=[PROJECT_ROOT / "tests/pydock/components/dummy_compose.yml"],
         compose_profiles=["my_test_profile"],
         compose_compatibility=True,
     )
@@ -648,9 +618,7 @@ def test_compose_single_profile():
 
 def test_compose_multiple_profiles():
     docker = DockerClient(
-        compose_files=[
-            PROJECT_ROOT / "tests/python_on_whales/components/dummy_compose.yml"
-        ],
+        compose_files=[PROJECT_ROOT / "tests/pydock/components/dummy_compose.yml"],
         compose_profiles=["my_test_profile", "my_test_profile2"],
         compose_compatibility=True,
     )
@@ -667,7 +635,7 @@ def test_compose_port():
     d = DockerClient(
         compose_files=[
             PROJECT_ROOT
-            / "tests/python_on_whales/components/dummy_compose_non_existent_image.yml"
+            / "tests/pydock/components/dummy_compose_non_existent_image.yml"
         ]
     )
     service = "busybox"

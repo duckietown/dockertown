@@ -24,8 +24,8 @@ All exceptions will have these 4 attributes:
 
 ```python
 import logging
-from python_on_whales import DockerClient
-from python_on_whales.exceptions import DockerException
+from pydock import DockerClient
+from pydock.exceptions import DockerException
 
 client = DockerClient(compose_files=["/tmp/docker-compose.yml"])
 try:

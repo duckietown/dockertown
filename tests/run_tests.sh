@@ -5,7 +5,7 @@ SANDBOX_NAME=pydock-tests
 SANDBOX_RUNTIME=docker.io/afdaniele/aavm-docker:20.10.7-amd64
 SANDBOX_RUN="docker exec -it ${SANDBOX_NAME}"
 
-# run a docker sandbox to run the tests in
+# run a docker sandbox to run the tests in (reuse if already running)
 docker run \
     -d \
     --rm \
@@ -18,7 +18,7 @@ docker run \
     --workdir /workdir \
     -e DOCKER_CLI_EXPERIMENTAL=enabled \
     --privileged \
-    ${SANDBOX_RUNTIME}
+    ${SANDBOX_RUNTIME} | :
 
 # wait until the sandbox is ready
 while ! ${SANDBOX_RUN} docker ps

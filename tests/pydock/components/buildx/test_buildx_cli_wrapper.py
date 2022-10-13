@@ -2,11 +2,11 @@ import os
 
 import pytest
 
-from python_on_whales import docker
-from python_on_whales.components.buildx.models import BuilderInspectResult
-from python_on_whales.exceptions import DockerException
-from python_on_whales.test_utils import set_cache_validity_period
-from python_on_whales.utils import PROJECT_ROOT
+from pydock import docker
+from pydock.components.buildx.models import BuilderInspectResult
+from pydock.exceptions import DockerException
+from pydock.test_utils import set_cache_validity_period
+from pydock.utils import PROJECT_ROOT
 
 dockerfile_content1 = """
 FROM busybox
@@ -388,7 +388,7 @@ def test_builder_inspect_result_platforms_from_string():
     assert a.platforms == ["linux/amd64", "linux/arm64"]
 
 
-bake_test_dir = PROJECT_ROOT / "tests/python_on_whales/components/bake_tests"
+bake_test_dir = PROJECT_ROOT / "tests/pydock/components/bake_tests"
 bake_file = bake_test_dir / "docker-bake.hcl"
 
 

@@ -1,7 +1,7 @@
 import pytest
 
-from python_on_whales.components.buildx.imagetools.models import Manifest
-from python_on_whales.test_utils import get_all_jsons
+from pydock.components.buildx.imagetools.models import Manifest
+from pydock.test_utils import get_all_jsons
 
 
 @pytest.mark.parametrize("json_file", get_all_jsons("manifests"))

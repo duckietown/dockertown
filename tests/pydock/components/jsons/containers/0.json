@@ -295,7 +295,7 @@
             "-c",
             "service ssh start && sleep infinity"
         ],
-        "Image": "gabrieldemarmiesse/work_env:local_build",
+        "Image": "duckietown/work_env:local_build",
         "Volumes": null,
         "WorkingDir": "",
         "Entrypoint": null,

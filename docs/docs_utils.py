@@ -1,8 +1,8 @@
 import tempfile
 from pathlib import Path
 
-from python_on_whales import docker
-from python_on_whales.exceptions import DockerException
+from pydock import docker
+from pydock.exceptions import DockerException
 
 
 def write_code(i: int, attribute_access: str, value) -> str:
@@ -441,8 +441,8 @@ def generate_code_demo_containers():
 
 def add_links(text):
     text = text.replace(
-        "`python_on_whales.Container`",
-        "[`python_on_whales.Container`](/docker_objects/containers/)",
+        "`pydock.Container`",
+        "[`pydock.Container`](/docker_objects/containers/)",
     )
 
     return text

@@ -31,7 +31,7 @@ jobs:
     - name: Run all tests
       run: |
         docker run hello-world
-        pytest -v ./tests/python_on_whales/components/test_volume.py::test_simple_volume
+        pytest -v ./tests/pydock/components/test_volume.py::test_simple_volume
 
 #  cost too much at the moment.
 #  build-macos:

@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from python_on_whales import docker
+from pydock import docker
 
 
 @pytest.fixture

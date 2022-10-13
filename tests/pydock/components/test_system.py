@@ -6,10 +6,10 @@ from time import sleep
 
 import pytest
 
-from python_on_whales import docker
-from python_on_whales.components.system.models import DockerEvent, SystemInfo
-from python_on_whales.exceptions import DockerException
-from python_on_whales.test_utils import get_all_jsons, random_name
+from pydock import docker
+from pydock.components.system.models import DockerEvent, SystemInfo
+from pydock.exceptions import DockerException
+from pydock.test_utils import get_all_jsons, random_name
 
 
 def test_disk_free():

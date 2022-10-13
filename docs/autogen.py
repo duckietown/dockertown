@@ -3,83 +3,75 @@ import shutil
 from docs_utils import add_all_code_examples, add_links
 from keras_autodoc import DocumentationGenerator, get_methods
 
-from python_on_whales.utils import PROJECT_ROOT
+from pydock.utils import PROJECT_ROOT
 
-a = get_methods(
-    "python_on_whales.components.buildx.imagetools.cli_wrapper.ImagetoolsCLI"
-)
+a = get_methods("pydock.components.buildx.imagetools.cli_wrapper.ImagetoolsCLI")
 print(a)
 pages = {
-    "docker_client.md": ["python_on_whales.DockerClient"]
-    + get_methods("python_on_whales.docker_client.DockerClient"),
+    "docker_client.md": ["pydock.DockerClient"]
+    + get_methods("pydock.docker_client.DockerClient"),
     "sub-commands/buildx.md": get_methods(
-        "python_on_whales.components.buildx.cli_wrapper.BuildxCLI"
+        "pydock.components.buildx.cli_wrapper.BuildxCLI"
     )
-    + get_methods(
-        "python_on_whales.components.buildx.imagetools.cli_wrapper.ImagetoolsCLI"
-    ),
+    + get_methods("pydock.components.buildx.imagetools.cli_wrapper.ImagetoolsCLI"),
     "sub-commands/compose.md": get_methods(
-        "python_on_whales.components.compose.cli_wrapper.ComposeCLI"
+        "pydock.components.compose.cli_wrapper.ComposeCLI"
     ),
     "sub-commands/config.md": get_methods(
-        "python_on_whales.components.config.cli_wrapper.ConfigCLI"
+        "pydock.components.config.cli_wrapper.ConfigCLI"
     ),
     "sub-commands/container.md": get_methods(
-        "python_on_whales.components.container.cli_wrapper.ContainerCLI"
+        "pydock.components.container.cli_wrapper.ContainerCLI"
     ),
     "sub-commands/context.md": get_methods(
-        "python_on_whales.components.context.cli_wrapper.ContextCLI"
+        "pydock.components.context.cli_wrapper.ContextCLI"
     ),
     "sub-commands/image.md": get_methods(
-        "python_on_whales.components.image.cli_wrapper.ImageCLI"
+        "pydock.components.image.cli_wrapper.ImageCLI"
     ),
     "sub-commands/manifest.md": get_methods(
-        "python_on_whales.components.manifest.cli_wrapper.ManifestCLI"
+        "pydock.components.manifest.cli_wrapper.ManifestCLI"
     ),
     "sub-commands/network.md": get_methods(
-        "python_on_whales.components.network.cli_wrapper.NetworkCLI"
+        "pydock.components.network.cli_wrapper.NetworkCLI"
     ),
-    "sub-commands/node.md": get_methods(
-        "python_on_whales.components.node.cli_wrapper.NodeCLI"
-    ),
+    "sub-commands/node.md": get_methods("pydock.components.node.cli_wrapper.NodeCLI"),
     "sub-commands/plugin.md": get_methods(
-        "python_on_whales.components.plugin.cli_wrapper.PluginCLI"
+        "pydock.components.plugin.cli_wrapper.PluginCLI"
     ),
     "sub-commands/secret.md": get_methods(
-        "python_on_whales.components.secret.cli_wrapper.SecretCLI"
+        "pydock.components.secret.cli_wrapper.SecretCLI"
     ),
     "sub-commands/service.md": get_methods(
-        "python_on_whales.components.service.cli_wrapper.ServiceCLI"
+        "pydock.components.service.cli_wrapper.ServiceCLI"
     ),
     "sub-commands/stack.md": get_methods(
-        "python_on_whales.components.stack.cli_wrapper.StackCLI"
+        "pydock.components.stack.cli_wrapper.StackCLI"
     ),
     "sub-commands/swarm.md": get_methods(
-        "python_on_whales.components.swarm.cli_wrapper.SwarmCLI"
+        "pydock.components.swarm.cli_wrapper.SwarmCLI"
     ),
     "sub-commands/system.md": get_methods(
-        "python_on_whales.components.system.cli_wrapper.SystemCLI"
+        "pydock.components.system.cli_wrapper.SystemCLI"
     ),
-    "sub-commands/task.md": get_methods(
-        "python_on_whales.components.task.cli_wrapper.TaskCLI"
-    ),
+    "sub-commands/task.md": get_methods("pydock.components.task.cli_wrapper.TaskCLI"),
     "sub-commands/trust.md": get_methods(
-        "python_on_whales.components.trust.cli_wrapper.TrustCLI"
+        "pydock.components.trust.cli_wrapper.TrustCLI"
     ),
     "sub-commands/volume.md": get_methods(
-        "python_on_whales.components.volume.cli_wrapper.VolumeCLI"
+        "pydock.components.volume.cli_wrapper.VolumeCLI"
     ),
-    "docker_objects/builders.md": get_methods("python_on_whales.Builder"),
-    "docker_objects/containers.md": get_methods("python_on_whales.Container"),
-    "docker_objects/configs.md": get_methods("python_on_whales.Config"),
-    "docker_objects/images.md": get_methods("python_on_whales.Image"),
-    "docker_objects/networks.md": get_methods("python_on_whales.Network"),
-    "docker_objects/nodes.md": get_methods("python_on_whales.Node"),
-    "docker_objects/plugins.md": get_methods("python_on_whales.Plugin"),
-    "docker_objects/services.md": get_methods("python_on_whales.Service"),
-    "docker_objects/secrets.md": get_methods("python_on_whales.Secret"),
-    "docker_objects/stacks.md": get_methods("python_on_whales.Stack"),
-    "docker_objects/volumes.md": get_methods("python_on_whales.Volume"),
+    "docker_objects/builders.md": get_methods("pydock.Builder"),
+    "docker_objects/containers.md": get_methods("pydock.Container"),
+    "docker_objects/configs.md": get_methods("pydock.Config"),
+    "docker_objects/images.md": get_methods("pydock.Image"),
+    "docker_objects/networks.md": get_methods("pydock.Network"),
+    "docker_objects/nodes.md": get_methods("pydock.Node"),
+    "docker_objects/plugins.md": get_methods("pydock.Plugin"),
+    "docker_objects/services.md": get_methods("pydock.Service"),
+    "docker_objects/secrets.md": get_methods("pydock.Secret"),
+    "docker_objects/stacks.md": get_methods("pydock.Stack"),
+    "docker_objects/volumes.md": get_methods("pydock.Volume"),
 }
 
 
@@ -112,18 +104,18 @@ doc_generator = MyDocumentationGenerator(
     pages,
     template_dir=PROJECT_ROOT / "docs/template",
     extra_aliases=[
-        "python_on_whales.Builder",
-        "python_on_whales.Container",
-        "python_on_whales.Config",
-        "python_on_whales.Image",
-        "python_on_whales.Network",
-        "python_on_whales.Node",
-        "python_on_whales.Plugin",
-        "python_on_whales.Service",
-        "python_on_whales.Secret",
-        "python_on_whales.Stack",
-        "python_on_whales.Task",
-        "python_on_whales.Volume",
+        "pydock.Builder",
+        "pydock.Container",
+        "pydock.Config",
+        "pydock.Image",
+        "pydock.Network",
+        "pydock.Node",
+        "pydock.Plugin",
+        "pydock.Service",
+        "pydock.Secret",
+        "pydock.Stack",
+        "pydock.Task",
+        "pydock.Volume",
     ],
     titles_size="##",
 )

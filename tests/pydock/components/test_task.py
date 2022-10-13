@@ -1,8 +1,8 @@
 import pytest
 
-from python_on_whales import docker
-from python_on_whales.components.task.models import TaskInspectResult
-from python_on_whales.test_utils import get_all_jsons
+from pydock import docker
+from pydock.components.task.models import TaskInspectResult
+from pydock.test_utils import get_all_jsons
 
 
 @pytest.mark.parametrize("json_file", get_all_jsons("tasks"))

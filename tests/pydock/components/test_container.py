@@ -7,15 +7,12 @@ from pathlib import Path
 
 import pytest
 
-import python_on_whales
-from python_on_whales import Image, docker
-from python_on_whales.components.container.cli_wrapper import ContainerStats
-from python_on_whales.components.container.models import (
-    ContainerInspectResult,
-    ContainerState,
-)
-from python_on_whales.exceptions import DockerException, NoSuchContainer
-from python_on_whales.test_utils import get_all_jsons, random_name
+import pydock
+from pydock import Image, docker
+from pydock.components.container.cli_wrapper import ContainerStats
+from pydock.components.container.models import ContainerInspectResult, ContainerState
+from pydock.exceptions import DockerException, NoSuchContainer
+from pydock.test_utils import get_all_jsons, random_name
 
 
 @pytest.mark.parametrize("json_file", get_all_jsons("containers"))
@@ -366,7 +363,7 @@ def test_context_manager_with_create():
         with docker.container.create(
             "busybox:1", ["sleep", "infinity"], name=container_name
         ) as c:
-            assert isinstance(c, python_on_whales.Container)
+            assert isinstance(c, pydock.Container)
             raise ArithmeticError
 
     assert container_name not in [x.name for x in docker.container.list(all=True)]

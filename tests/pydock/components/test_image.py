@@ -1,9 +1,9 @@
 import pytest
 
-from python_on_whales import docker
-from python_on_whales.components.image.models import ImageInspectResult
-from python_on_whales.exceptions import DockerException, NoSuchImage
-from python_on_whales.test_utils import get_all_jsons, random_name
+from pydock import docker
+from pydock.components.image.models import ImageInspectResult
+from pydock.exceptions import DockerException, NoSuchImage
+from pydock.test_utils import get_all_jsons, random_name
 
 
 @pytest.mark.parametrize("json_file", get_all_jsons("images"))
@@ -49,22 +49,6 @@ def test_save_iterator_bytes():
 def test_filter_when_listing():
     docker.pull(["hello-world", "busybox"])
     images_listed = docker.image.list(filters=dict(reference="hello-world"))
-    tags = set()
-    for image in images_listed:
-        for tag in image.repo_tags:
-            tags.add(tag)
-    assert tags == {"hello-world:latest"}
-
-
-def test_filter_when_listing_old_signature():
-    """Check backward compatibility"""
-    docker.pull(["hello-world", "busybox"])
-    with pytest.warns(DeprecationWarning) as warnings_emmitted:
-        images_listed = docker.image.list({"reference": "hello-world"})
-
-    warning_message = str(warnings_emmitted.list[0].message)
-    assert "docker.image.list({'reference': 'hello-world'}" in warning_message
-    assert "docker.image.list(filters={'reference': 'hello-world'}" in warning_message
     tags = set()
     for image in images_listed:
         for tag in image.repo_tags:

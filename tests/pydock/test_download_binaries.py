@@ -1,7 +1,7 @@
 import platform
 
-from python_on_whales import download_binaries
-from python_on_whales.utils import run
+from pydock import download_binaries
+from pydock.utils import run
 
 
 def test_download_from_url(tmp_path):
@@ -29,7 +29,7 @@ def test_download_cli_from_cli():
         download_binaries.get_docker_binary_path_in_cache().unlink()
     except FileNotFoundError:
         pass
-    run(["python-on-whales", "download-cli"])
+    run(["pydock", "download-cli"])
     simple_command = [
         download_binaries.get_docker_binary_path_in_cache(),
         "run",

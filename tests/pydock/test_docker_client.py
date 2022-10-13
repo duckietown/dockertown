@@ -3,8 +3,14 @@ from pathlib import Path
 
 import pytest
 
-from python_on_whales import DockerClient, docker
-from python_on_whales.exceptions import DockerException
+from pydock import DockerClient, docker
+from pydock.exceptions import DockerException
+
+
+def test_version():
+    version = docker.version()
+    assert "Client" in version
+    assert "Server" in version
 
 
 def test_login_logout(docker_registry_without_login):

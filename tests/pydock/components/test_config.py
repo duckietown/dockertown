@@ -1,6 +1,6 @@
 import pytest
 
-from python_on_whales import docker
+from pydock import docker
 
 
 @pytest.mark.usefixtures("swarm_mode")

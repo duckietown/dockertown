@@ -1,4 +1,4 @@
-from python_on_whales import docker
+from pydock import docker
 
 
 def test_imagetools_inspect_multiarch():

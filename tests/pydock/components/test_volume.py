@@ -3,10 +3,10 @@ from pathlib import Path
 
 import pytest
 
-from python_on_whales import docker
-from python_on_whales.components.volume.models import VolumeInspectResult
-from python_on_whales.exceptions import NoSuchVolume
-from python_on_whales.test_utils import get_all_jsons
+from pydock import docker
+from pydock.components.volume.models import VolumeInspectResult
+from pydock.exceptions import NoSuchVolume
+from pydock.test_utils import get_all_jsons
 
 
 @pytest.mark.parametrize("json_file", get_all_jsons("volumes"))

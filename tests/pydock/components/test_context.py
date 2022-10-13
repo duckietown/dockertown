@@ -1,8 +1,8 @@
 import pytest
 
-from python_on_whales import docker
-from python_on_whales.components.context.models import ContextInspectResult
-from python_on_whales.test_utils import get_all_jsons
+from pydock import docker
+from pydock.components.context.models import ContextInspectResult
+from pydock.test_utils import get_all_jsons
 
 
 @pytest.mark.parametrize("json_file", get_all_jsons("contexts"))

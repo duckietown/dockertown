@@ -3,7 +3,7 @@
 
 Don't use the constructor directly. Instead use 
 ```python
-from python_on_whales import docker
+from pydock import docker
 
 my_docker_plugin = docker.plugin.install("vieux/sshfs:latest")
 # or
@@ -14,7 +14,7 @@ list_of_plugins = docker.plugins.list()
 For type hints, use this
 
 ```python
-from python_on_whales import Plugin
+from pydock import Plugin
 
 def print_name(plugin: Plugin):
     print(plugin.name)
@@ -33,7 +33,7 @@ and click on "200 No error".
 An example is worth many lines of descriptions.
 
 ```
-In [1]: from python_on_whales import docker
+In [1]: from pydock import docker
 
 In [2]: plugin = docker.plugin.install("vieux/sshfs:latest")
 

@@ -3,9 +3,9 @@ from typing import List
 
 import pytest
 
-from python_on_whales import docker
-from python_on_whales.components.plugin.models import PluginInspectResult
-from python_on_whales.test_utils import get_all_jsons
+from pydock import docker
+from pydock.components.plugin.models import PluginInspectResult
+from pydock.test_utils import get_all_jsons
 
 test_plugin_name = "vieux/sshfs:latest"
 
