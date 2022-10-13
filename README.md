@@ -1,6 +1,10 @@
-<img src="https://raw.githubusercontent.com/duckietown/pydock/master/img/full.png" alt="logo" class="responsive" style="width: 80%; height: auto;">
+# PyDock
 
-A Docker client for Python, designed to be fun and intuitive!
+```text
+NOTE: this project is based on the python-on-whales project, you can find it at https://github.com/gabrieldemarmiesse/python-on-whales.
+```
+
+A decent Python wrapper for Docker CLI.
 
 Works on Linux, macOS and Windows, for Python 3.7 and above. 
 
