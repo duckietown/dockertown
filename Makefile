@@ -1,7 +1,7 @@
-tag=dt_authentication
+tag=pydock
 
-regular_packages=dt_authentication
-test_packages=dt_authentication_tests
+regular_packages=pydock
+test_packages=pydock_tests
 cover_packages=$(test_packages),$(regular_packages)
 
 CIRCLE_NODE_INDEX ?= 0
@@ -78,7 +78,7 @@ run:
 #
 run-with-mounted-src:
 	mkdir -p out-docker
-	docker run -it -v $(PWD)/src:/dt_authentication/src:ro -v $(PWD)/out-docker:/out $(tag) dt-pc-demo
+	docker run -it -v $(PWD)/src:/pydock/src:ro -v $(PWD)/out-docker:/out $(tag) dt-pc-demo
 
 
 coverage-report:
