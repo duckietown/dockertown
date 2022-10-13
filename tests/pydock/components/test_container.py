@@ -257,7 +257,7 @@ def test_rename():
     container = docker.container.run("hello-world", name=name, detach=True)
     docker.container.rename(container, new_name)
     container.reload()
-
+    time.sleep(0.3)
     assert container.name == new_name
     docker.container.remove(container)
 
@@ -265,6 +265,7 @@ def test_rename():
 def test_name():
     name = random_name()
     container = docker.container.run("hello-world", name=name, detach=True)
+    time.sleep(0.3)
     assert container.name == name
     docker.container.remove(container)
 
