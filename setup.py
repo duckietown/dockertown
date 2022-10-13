@@ -12,7 +12,7 @@ def get_long_description() -> str:
 setup(
     name="pydock",
     version="0.0.1",
-    description="A Docker client for Python, designed to be fun and intuitive!",
+    description="A decent Python wrapper for Docker CLI",
     long_description=get_long_description(),
     long_description_content_type="text/markdown",
     install_requires=(CURRENT_DIR / "requirements.txt").read_text().splitlines(),
