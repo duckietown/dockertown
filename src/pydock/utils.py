@@ -18,6 +18,7 @@ from .exceptions import (
     NoSuchService,
     NoSuchVolume,
     NotASwarmManager,
+    NoSuchManifest,
 )
 
 PROJECT_ROOT = Path(__file__).parents[2]
@@ -168,6 +169,13 @@ def run(
                 )
             if "no such volume" in completed_process.stderr.decode().lower():
                 raise NoSuchVolume(
+                    args,
+                    completed_process.returncode,
+                    completed_process.stdout,
+                    completed_process.stderr,
+                )
+            if "no such manifest" in completed_process.stderr.decode().lower():
+                raise NoSuchManifest(
                     args,
                     completed_process.returncode,
                     completed_process.stdout,

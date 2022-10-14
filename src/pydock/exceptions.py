@@ -60,3 +60,7 @@ class NotASwarmManager(DockerException):
 
 class NoSuchVolume(DockerException):
     pass
+
+
+class NoSuchManifest(DockerException):
+    pass
