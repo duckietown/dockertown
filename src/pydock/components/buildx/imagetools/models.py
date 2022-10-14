@@ -23,6 +23,18 @@ class ManifestPlatform(pydantic.BaseModel):
     os_version: Optional[str]
     variant: Optional[str]
 
+    def as_string(self) -> str:
+        parts = []
+        if self.os:
+            parts.append(self.os)
+        if self.os_version:
+            parts.append(self.os_version)
+        if self.architecture:
+            parts.append(self.architecture)
+        if self.variant:
+            parts.append(self.variant)
+        return "/".join(parts)
+
 
 class ImageVariantManifest(pydantic.BaseModel):
     media_type: str = pydantic.Field(alias="mediaType")
