@@ -1,6 +1,5 @@
 import base64
 import json
-import warnings
 from typing import List, Optional, Dict
 
 from .client_config import ClientConfig, DockerCLICaller
@@ -100,16 +99,8 @@ class DockerClient(DockerCLICaller):
         compose_project_name: Optional[str] = None,
         compose_project_directory: Optional[ValidPath] = None,
         compose_compatibility: Optional[bool] = None,
-        client_binary: str = "docker",
         client_call: List[str] = ["docker"],
     ):
-        if client_binary != "docker":
-            warnings.warn(
-                "The usage of client_binary is deprecated, use `client_call` instead. For "
-                "example if you used `client_binary='podman'`, now you should use `client_call=['podman']`."
-            )
-            client_call = [client_binary]
-
         if client_config is None:
             client_config = ClientConfig(
                 config=config,
