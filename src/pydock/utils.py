@@ -249,8 +249,14 @@ def stream_stdout_and_stderr(
     else:
         subprocess_env = dict(os.environ)
         subprocess_env.update(env)
-
     full_cmd = list(map(str, full_cmd))
+
+    if os.environ.get("PYDOCK_DEBUG", "0") == "1":
+        print("------------------------------")
+        print("command: " + " ".join(full_cmd))
+        print(f"Env: {subprocess_env}")
+        print("------------------------------")
+
     process = Popen(full_cmd, stdout=PIPE, stderr=PIPE, env=subprocess_env)
     q = Queue()
     full_stderr = b""  # for the error message
