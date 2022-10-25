@@ -199,10 +199,11 @@ class BuildxCLI(DockerCLICaller):
 
     def build(
         self,
-        context_path: ValidPath,
+        path: ValidPath,
         add_hosts: Dict[str, str] = {},
         allow: List[str] = [],
         build_args: Dict[str, str] = {},
+        build_contexts: Dict[str, ValidPath] = {},
         builder: Optional[ValidBuilder] = None,
         cache: bool = True,
         cache_from: Union[str, Dict[str, str], List[Dict[str, str]], None] = None,
@@ -232,12 +233,14 @@ class BuildxCLI(DockerCLICaller):
         then `None` is returned.
 
         # Arguments
-            context_path: The path of the build context.
+            path: The path of the build context.
             add_hosts: Hosts to add. `add_hosts={"my_host1": "192.168.32.35"}`
             allow: List of extra privileges.
                 Eg `allow=["network.host", "security.insecure"]`
             build_args: The build arguments.
                 ex `build_args={"PY_VERSION": "3.7.8", "UBUNTU_VERSION": "20.04"}`.
+            build_contexts: Additional build contexts (e.g., name=path).
+                ex `build_contexts={"cxt1": "/app/dir1", "cxt2": "/app/dir2"}`.
             builder: Specify which builder to use.
             cache: Whether or not to use the cache
             cache_from: Works only with the container driver. Loads the cache
@@ -292,6 +295,9 @@ class BuildxCLI(DockerCLICaller):
         full_cmd.add_args_list(
             "--add-host", format_dict_for_cli(add_hosts, separator=":")
         )
+        full_cmd.add_args_list(
+            "--build-context", format_dict_for_cli(build_contexts, separator="=")
+        )
         full_cmd.add_args_list("--allow", allow)
         full_cmd.add_args_list("--build-arg", format_dict_for_cli(build_args))
         full_cmd.add_simple_arg("--builder", builder)
@@ -333,7 +339,7 @@ class BuildxCLI(DockerCLICaller):
                     "coherent."
                 )
 
-            full_cmd.append(context_path)
+            full_cmd.append(path)
             return stream_buildx_logs(full_cmd)
 
         will_load_image = self._build_will_load_image(builder, push, load, output)
@@ -347,13 +353,13 @@ class BuildxCLI(DockerCLICaller):
             will_load_image = False
 
         if not will_load_image:
-            full_cmd.append(context_path)
+            full_cmd.append(path)
             run(full_cmd, capture_stderr=progress is False)
             return
 
         docker_image = ImageCLI(self.client_config)
         if self._method_to_get_image(builder) == GetImageMethod.TAG:
-            full_cmd.append(context_path)
+            full_cmd.append(path)
             run(full_cmd, capture_stderr=progress is False)
             return docker_image.inspect(tags[0])
         else:
@@ -361,7 +367,7 @@ class BuildxCLI(DockerCLICaller):
                 tmp_dir = Path(tmp_dir)
                 iidfile = tmp_dir / "id_file.txt"
                 full_cmd.add_simple_arg("--iidfile", iidfile)
-                full_cmd.append(context_path)
+                full_cmd.append(path)
                 run(full_cmd, capture_stderr=progress is False)
                 image_id = iidfile.read_text()
                 return docker_image.inspect(image_id)
