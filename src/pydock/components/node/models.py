@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 
 from pydantic import Field
 
@@ -29,7 +29,7 @@ class NodeNamedResourceSpec(DockerCamelModel):
 
 class NodeDiscreteResourceSpec(DockerCamelModel):
     kind: str
-    value: int
+    value: Union[str, int]
 
 
 class NodeGenericResource(DockerCamelModel):
