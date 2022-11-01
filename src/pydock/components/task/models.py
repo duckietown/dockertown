@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List
 
 import pydantic
 
@@ -20,7 +20,7 @@ class NamedResourceSpec(DockerCamelModel):
 @all_fields_optional
 class DiscreteResourceSpec(DockerCamelModel):
     kind: str
-    value: Union[str, int]
+    value: int
 
 
 @all_fields_optional
