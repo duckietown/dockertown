@@ -72,13 +72,7 @@ class ManifestCLI(DockerCLICaller):
         full_cmd = self.docker_cmd + ["manifest", "inspect"]
         full_cmd.add_flag("--insecure", insecure)
         full_cmd.append(name)
-        try:
-            result = run(full_cmd)
-        except DockerException as e:
-            # manifest not found
-            if "no such manifest" in e.stderr:
-                return None
-            raise e
+        result = run(full_cmd)
         return Manifest.parse_raw(result)
 
     def push(self,
