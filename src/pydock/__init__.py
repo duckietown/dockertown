@@ -1,4 +1,4 @@
-__version__ = "0.0.7"
+__version__ = "0.0.8"
 
 from .client_config import ClientNotFoundError
 from .components.buildx.cli_wrapper import Builder
