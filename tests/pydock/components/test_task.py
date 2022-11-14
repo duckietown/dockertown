@@ -1,8 +1,8 @@
 import pytest
 
-from pydock import docker
-from pydock.components.task.models import TaskInspectResult
-from pydock.test_utils import get_all_jsons
+from dockertown import docker
+from dockertown.components.task.models import TaskInspectResult
+from dockertown.test_utils import get_all_jsons
 
 
 @pytest.mark.parametrize("json_file", get_all_jsons("tasks"))

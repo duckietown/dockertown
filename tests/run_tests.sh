@@ -1,7 +1,7 @@
 set -e
 
 # constants
-SANDBOX_NAME=pydock-tests
+SANDBOX_NAME=dockertown-tests
 SANDBOX_RUNTIME=docker.io/afdaniele/aavm-docker:20.10.7-amd64
 SANDBOX_RUN="docker exec -it ${SANDBOX_NAME}"
 

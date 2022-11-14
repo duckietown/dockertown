@@ -1,8 +1,8 @@
 import pytest
 
-from pydock import docker
-from pydock.components.node.models import NodeInspectResult
-from pydock.test_utils import get_all_jsons
+from dockertown import docker
+from dockertown.components.node.models import NodeInspectResult
+from dockertown.test_utils import get_all_jsons
 
 
 @pytest.mark.parametrize("json_file", get_all_jsons("nodes"))

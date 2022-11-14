@@ -3,9 +3,9 @@ from typing import List
 
 import pytest
 
-from pydock import docker
-from pydock.components.plugin.models import PluginInspectResult
-from pydock.test_utils import get_all_jsons
+from dockertown import docker
+from dockertown.components.plugin.models import PluginInspectResult
+from dockertown.test_utils import get_all_jsons
 
 test_plugin_name = "vieux/sshfs:latest"
 

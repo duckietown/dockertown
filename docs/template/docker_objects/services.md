@@ -4,7 +4,7 @@ Services in Docker swarm
 
 Don't use the constructor directly. Instead use 
 ```python
-from pydock import docker
+from dockertown import docker
 
 my_docker_service = docker.service.inspect("my-service")
 
@@ -14,7 +14,7 @@ my_docker_service = docker.service.create("busybox", ["ping", "www.google.com"])
 For type hints, use this
 
 ```python
-from pydock import Service
+from dockertown import Service
 
 def print_creation_time(some_service: Service):
     print(some_service.created_at)
@@ -33,7 +33,7 @@ and click on "200 No error".
 An example is worth many lines of descriptions.
 
 ```
-In [1]: from pydock import docker
+In [1]: from dockertown import docker
 
 In [2]: docker.swarm.init()
 

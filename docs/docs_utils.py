@@ -1,8 +1,8 @@
 import tempfile
 from pathlib import Path
 
-from pydock import docker
-from pydock.exceptions import DockerException
+from dockertown import docker
+from dockertown.exceptions import DockerException
 
 
 def write_code(i: int, attribute_access: str, value) -> str:
@@ -441,8 +441,8 @@ def generate_code_demo_containers():
 
 def add_links(text):
     text = text.replace(
-        "`pydock.Container`",
-        "[`pydock.Container`](/docker_objects/containers/)",
+        "`dockertown.Container`",
+        "[`dockertown.Container`](/docker_objects/containers/)",
     )
 
     return text

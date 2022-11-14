@@ -90,7 +90,7 @@ class Service(ReloadableObjectFromJson):
         if an exception occurs.
 
         ```python
-        from pydock import docker
+        from dockertown import docker
 
         docker.swarm.init()
         with docker.service.create("ubuntu", ["sleep", "infinity"]) as my_service:
@@ -237,10 +237,10 @@ class ServiceCLI(DockerCLICaller):
         ...
 
     def inspect(self, x: Union[str, List[str]]) -> Union[Service, List[Service]]:
-        """Returns one or a list of `pydock.Service` object(s).
+        """Returns one or a list of `dockertown.Service` object(s).
 
         # Raises
-            `pydock.exceptions.NoSuchService` if one of the services
+            `dockertown.exceptions.NoSuchService` if one of the services
             doesn't exists.
         """
         if isinstance(x, str):
@@ -252,7 +252,7 @@ class ServiceCLI(DockerCLICaller):
         """Verify that a service exists.
 
          It's just calling `docker.service.inspect(...)` and verifies that it doesn't throw
-         a `pydock.exceptions.NoSuchService`.
+         a `dockertown.exceptions.NoSuchService`.
 
         # Returns
             A `bool`
@@ -300,7 +300,7 @@ class ServiceCLI(DockerCLICaller):
                 This function will then returns and iterator that will yield a
                 tuple `(source, content)` with `source` being `"stderr"` or
                 `"stdout"`. `content` is the content of the line as bytes.
-                Take a look at [the user guide](https://duckietown.github.io/pydock/user_guide/docker_run/#stream-the-output)
+                Take a look at [the user guide](https://duckietown.github.io/dockertown/user_guide/docker_run/#stream-the-output)
                 to have an example of the output.
 
         # Returns
@@ -308,7 +308,7 @@ class ServiceCLI(DockerCLICaller):
             if `stream=True`.
 
         # Raises
-            `pydock.exceptions.NoSuchService` if the service does not exists.
+            `dockertown.exceptions.NoSuchService` if the service does not exists.
         """
         # first we verify that the service exists and raise an exception if not.
         self.inspect(str(service))
@@ -335,7 +335,7 @@ class ServiceCLI(DockerCLICaller):
         """Returns the list of services
 
         # Returns
-            A `List[pydock.Services]`
+            A `List[dockertown.Services]`
         """
         full_cmd = self.docker_cmd + ["service", "list", "--quiet"]
 
@@ -368,7 +368,7 @@ class ServiceCLI(DockerCLICaller):
         You can pass multiple services at once at this function.
 
         ```python
-        from pydock import docker
+        from dockertown import docker
 
         tasks = docker.service.ps("my-service-name")
         print(tasks[0].desired_state)
@@ -376,13 +376,13 @@ class ServiceCLI(DockerCLICaller):
         ```
 
         # Arguments
-            x: One or more services (can be id, name or `pydock.Service` object.)
+            x: One or more services (can be id, name or `dockertown.Service` object.)
 
         # Returns
-            `List[pydock.Task]`
+            `List[dockertown.Task]`
 
         # Raises
-            `pydock.exceptions.NoSuchService` if one of the services
+            `dockertown.exceptions.NoSuchService` if one of the services
             doesn't exist.
         """
         full_cmd = (
@@ -401,7 +401,7 @@ class ServiceCLI(DockerCLICaller):
             services: One or a list of services to remove.
 
         # Raises
-            `pydock.exceptions.NoSuchService` if one of the services
+            `dockertown.exceptions.NoSuchService` if one of the services
             doesn't exist.
         """
         full_cmd = self.docker_cmd + ["service", "remove"]
@@ -428,7 +428,7 @@ class ServiceCLI(DockerCLICaller):
                 immediately.
 
         # Raises
-            `pydock.exceptions.NoSuchService` if one of the services
+            `dockertown.exceptions.NoSuchService` if one of the services
             doesn't exists.
 
         """
@@ -462,7 +462,7 @@ class ServiceCLI(DockerCLICaller):
                 to swarm agents
 
         # Raises
-            `pydock.exceptions.NoSuchService` if the service doesn't exists.
+            `dockertown.exceptions.NoSuchService` if the service doesn't exists.
         """
         full_cmd = self.docker_cmd + ["service", "update"]
         full_cmd.add_flag("--force", force)

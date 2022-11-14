@@ -34,7 +34,7 @@ class Config(ReloadableObjectFromJson):
     def remove(self):
         """Remove this config.
 
-        Note that you can also use a `pydock.Config` as a context manager
+        Note that you can also use a `dockertown.Config` as a context manager
         to ensure it's removed even if an exception occurs.
         """
         ConfigCLI(self.client_config).remove(self)
@@ -83,7 +83,7 @@ class ConfigCLI(DockerCLICaller):
             template_driver: The template driver
 
         # Returns
-            A `pydock.Config` object.
+            A `dockertown.Config` object.
         """
         full_cmd = self.docker_cmd + ["config", "create"]
         full_cmd.add_args_list("--label", format_dict_for_cli(labels))
@@ -100,14 +100,14 @@ class ConfigCLI(DockerCLICaller):
         ...
 
     def inspect(self, x: Union[str, List[str]]) -> Union[Config, List[Config]]:
-        """Returns a `pydock.Config` object based on its name or id.
+        """Returns a `dockertown.Config` object based on its name or id.
 
         # Argument
             x: An id or name or a list of ids/names.
 
         # Returns
-            A `pydock.Config` if a string was passed as argument. A
-            `List[pydock.Config]` if a list of strings was passed as argument.
+            A `dockertown.Config` if a string was passed as argument. A
+            `List[dockertown.Config]` if a list of strings was passed as argument.
         """
         if isinstance(x, str):
             return Config(self.client_config, x)
@@ -122,7 +122,7 @@ class ConfigCLI(DockerCLICaller):
                 For example, `docker.config.list(filters=dict(label="my_label=hello"))`.
 
         # Returns
-            A `List[pydock.Config]`.
+            A `List[dockertown.Config]`.
         """
         full_cmd = self.docker_cmd + ["config", "list", "--quiet"]
         full_cmd.add_args_list("--filter", format_dict_for_cli(filters))
@@ -135,7 +135,7 @@ class ConfigCLI(DockerCLICaller):
 
         # Arguments
             x: One or a list of configs. Valid values are the id of the config or
-                a `pydock.Config` object.
+                a `dockertown.Config` object.
                 An empty list means the function call does nothing.
         """
         full_cmd = self.docker_cmd + ["config", "rm"]

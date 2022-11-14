@@ -8,37 +8,37 @@ A decent Python wrapper for Docker CLI.
 
 Works on Linux, macOS and Windows, for Python 3.7 and above. 
 
-The docs can be found at this address: <https://duckietown.github.io/pydock/>
+The docs can be found at this address: <https://duckietown.github.io/dockertown/>
 
-The GitHub repo can be found at this address: <https://github.com/duckietown/pydock>
+The GitHub repo can be found at this address: <https://github.com/duckietown/dockertown>
 
 
 ## How to install?
 
 ```bash
-pip install pydock
+pip install dockertown
 ```
 
 ## Some cool examples
 
 Start by doing
 ```python
-from pydock import docker
+from dockertown import docker
 ```
 and then:
 
-* `docker run hello-world` -> [`docker.run("hello-world")`](https://duckietown.github.io/pydock/sub-commands/container/#run)
-* `docker pull ubuntu` -> [`docker.pull("ubuntu")`](https://duckietown.github.io/pydock/sub-commands/image/#pull)
-* `docker build ./` -> [`docker.build("./")`](https://duckietown.github.io/pydock/sub-commands/buildx/#build)
-* `docker compose up my_service` -> [`docker.compose.up(["my_service"])`](https://duckietown.github.io/pydock/sub-commands/compose/#up)
-* `docker image ls` -> [`docker.image.list()`](https://duckietown.github.io/pydock/sub-commands/image/#list)
-* `docker ps` -> [`docker.ps()`](https://duckietown.github.io/pydock/sub-commands/container/#list)
-* `docker cp` -> [`docker.copy()`](https://duckietown.github.io/pydock/sub-commands/container/#copy)
+* `docker run hello-world` -> [`docker.run("hello-world")`](https://duckietown.github.io/dockertown/sub-commands/container/#run)
+* `docker pull ubuntu` -> [`docker.pull("ubuntu")`](https://duckietown.github.io/dockertown/sub-commands/image/#pull)
+* `docker build ./` -> [`docker.build("./")`](https://duckietown.github.io/dockertown/sub-commands/buildx/#build)
+* `docker compose up my_service` -> [`docker.compose.up(["my_service"])`](https://duckietown.github.io/dockertown/sub-commands/compose/#up)
+* `docker image ls` -> [`docker.image.list()`](https://duckietown.github.io/dockertown/sub-commands/image/#list)
+* `docker ps` -> [`docker.ps()`](https://duckietown.github.io/dockertown/sub-commands/container/#list)
+* `docker cp` -> [`docker.copy()`](https://duckietown.github.io/dockertown/sub-commands/container/#copy)
 
 You get the idea 🙂 it's the same as the CLI we all know and love.
 
 ```python
->>> from pydock import docker
+>>> from dockertown import docker
 
 >>> output = docker.run("hello-world")
 >>> print(output)
@@ -51,7 +51,7 @@ This message shows that your installation appears to be working correctly.
 
 
 ```python
->>> from pydock import docker
+>>> from dockertown import docker
 >>> print(docker.run("nvidia/cuda:11.0-base", ["nvidia-smi"], gpus="all"))
 +-----------------------------------------------------------------------------+
 | NVIDIA-SMI 450.51.06    Driver Version: 450.51.06    CUDA Version: 11.0     |
@@ -75,7 +75,7 @@ This message shows that your installation appears to be working correctly.
 ```
 
 ```python
->>> from pydock import docker
+>>> from dockertown import docker
 >>> my_docker_image = docker.pull("ubuntu:20.04")
 20.04: Pulling from library/ubuntu
 e6ca3592b144: Downloading [=============>                                     ]  7.965MB/28.56MB
@@ -86,13 +86,13 @@ e6ca3592b144: Downloading [=============>                                     ] 
 ['ubuntu:20.04']
 
 >>> docker.image.list()
-[pydock.Image(id='sha256:1a437e363abfa', tags=['ubuntu:20.04'])]
+[dockertown.Image(id='sha256:1a437e363abfa', tags=['ubuntu:20.04'])]
 
 >>> my_docker_image.remove()
 ```
 
 ```python
->>> from pydock import docker
+>>> from dockertown import docker
 >>> my_image = docker.build(".", tags="some_name")  # uses Buildx/buildkit by default
 [+] Building 1.6s (17/17) FINISHED
  => [internal] load build definition from Dockerfile                                                            0.0s
@@ -111,7 +111,7 @@ e6ca3592b144: Downloading [=============>                                     ] 
  => CACHED [tests_ubuntu_install_without_buildx 2/7] RUN curl -fsSL https://download.docker.com/linux/ubuntu/g  0.0s
  => CACHED [tests_ubuntu_install_without_buildx 3/7] RUN add-apt-repository    "deb [arch=amd64] https://downl  0.0s
  => CACHED [tests_ubuntu_install_without_buildx 4/7] RUN  apt-get update &&      apt-get install -y docker-ce-  0.0s
- => CACHED [tests_ubuntu_install_without_buildx 5/7] WORKDIR /pydock                                  0.0s
+ => CACHED [tests_ubuntu_install_without_buildx 5/7] WORKDIR /dockertown                                  0.0s
  => CACHED [tests_ubuntu_install_without_buildx 6/7] COPY . .                                                   0.0s
  => CACHED [tests_ubuntu_install_without_buildx 7/7] RUN pip install -e .                                       0.0s
  => exporting to image                                                                                          0.1s
@@ -127,7 +127,7 @@ docker run --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -d postgre
 ```
 becomes
 ```python
-from pydock import docker
+from dockertown import docker
 
 docker.run(
     "postgres:9.6",
@@ -136,7 +136,7 @@ docker.run(
     detach=True,
 )
 print(docker.ps())
-# [pydock.Container(id='f5fb939c409d', name='some-postgres')]
+# [dockertown.Container(id='f5fb939c409d', name='some-postgres')]
 ```
 
 -----
@@ -146,7 +146,7 @@ docker run -it --rm --network some-network postgres psql -h some-postgres -U pos
 ```
 becomes
 ```python
-from pydock import docker
+from dockertown import docker
 
 # since it's interactive, you'll be dropped into the psql shell. The python code
 # will continue only after you exit the shell.
@@ -167,7 +167,7 @@ docker run -d --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -e PGDA
 ```
 becomes
 ```python
-from pydock import docker
+from dockertown import docker
 
 docker.run(
     "postgres:9.6",
@@ -272,10 +272,10 @@ Take those numbers with a grain of salt. The functions don't all need the same a
 
 Support for Docker-compatible clients like [Podman](https://podman.io/) and [Nerdctl](https://github.com/containerd/nerdctl) was introduced in Pydock version 0.44.0.
 
-You can use an arbitrary binary to execute Docker commands by using the argument `client_call` of `pydock.DockerCLient`.
+You can use an arbitrary binary to execute Docker commands by using the argument `client_call` of `dockertown.DockerCLient`.
 Here is an example:
 ```python
->>> from pydock import DockerClient
+>>> from dockertown import DockerClient
 
 >>> nerdctl = DockerClient(client_call=["nerdctl"])
 
@@ -295,13 +295,13 @@ layer-sha256:6aefca2dc61dcbcd268b8a9861e552f9cdb69e57242faec64ac120d2355a9c1a:  
 layer-sha256:32a180f5cf85702e7680719c40c39c07972b1176355df5a621de9eb87ad07ce2:    done           |++++++++++++++++++++++++++++++++++++++|
 elapsed: 35.9s                                                                    total:  333.5  (9.3 MiB/s)
 
-pydock.Image(id='sha256:f033692e2c5ab', tags=['python:3.9'])
+dockertown.Image(id='sha256:f033692e2c5ab', tags=['python:3.9'])
 ```
 
 You can do something similar with podman:
 
 ```python
-from pydock import DockerClient
+from dockertown import DockerClient
 
 podman = DockerClient(client_call=["podman"])
 
@@ -320,4 +320,4 @@ Any and all PRs are welcome. Please see [this documentation](./CONTRIBUTING.md).
 
 It's a MIT license, so quite permissive.
 
-The license can be found [in the git repository](https://github.com/duckietown/pydock/blob/master/LICENSE).
+The license can be found [in the git repository](https://github.com/duckietown/dockertown/blob/master/LICENSE).

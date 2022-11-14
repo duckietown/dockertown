@@ -4,7 +4,7 @@ The Buildx builders objects.
 
 Don't use the constructor directly. Instead use 
 ```python
-from pydock import docker
+from dockertown import docker
 
 my_builder = docker.buildx.inspect("my-builder")
 
@@ -16,7 +16,7 @@ my_builder = docker.buildx.create()
 For type hints, use this
 
 ```python
-from pydock import Builder
+from dockertown import Builder
 ```
 
 ## Attributes
@@ -26,7 +26,7 @@ It attributes are the same that you get with the command line:
 
 Only a few are available at the moment
 ```
-In [1]: from pydock import docker
+In [1]: from dockertown import docker
 
 In [2]: my_builder = docker.buildx.create()
 

@@ -57,7 +57,7 @@ class ComposeCLI(DockerCLICaller):
 
         For example
         ```python
-        from pydock import docker
+        from dockertown import docker
         project_config = docker.compose.config()
         print(project_config.services["my_first_service"].image)
         "redis"
@@ -245,7 +245,7 @@ class ComposeCLI(DockerCLICaller):
                 This function will then return and iterator that will yield a
                 tuple `(source, content)` with `source` being `"stderr"` or
                 `"stdout"`. `content` is the content of the line as bytes.
-                Take a look at [the user guide](https://duckietown.github.io/pydock/user_guide/docker_run/#stream-the-output)
+                Take a look at [the user guide](https://duckietown.github.io/dockertown/user_guide/docker_run/#stream-the-output)
                 to have an example of the output.
         # Returns
             `str` if `stream=False` (the default), `Iterable[Tuple[str, bytes]]`
@@ -320,7 +320,7 @@ class ComposeCLI(DockerCLICaller):
         """Returns the containers that were created by the current project.
 
         # Returns
-            A `List[pydock.Container]`
+            A `List[dockertown.Container]`
         """
         full_cmd = self.docker_compose_cmd + ["ps", "--quiet"]
         result = run(full_cmd)

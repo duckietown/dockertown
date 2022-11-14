@@ -3,9 +3,9 @@ from pathlib import Path
 
 import pytest
 
-from pydock import docker
-from pydock.exceptions import NotASwarmManager
-from pydock.utils import PROJECT_ROOT
+from dockertown import docker
+from dockertown.exceptions import NotASwarmManager
+from dockertown.utils import PROJECT_ROOT
 
 
 @pytest.fixture
@@ -13,7 +13,7 @@ def with_test_stack(swarm_mode):
     time.sleep(1)
     some_stack = docker.stack.deploy(
         "some_stack",
-        [PROJECT_ROOT / "tests/pydock/components/test-stack-file.yml"],
+        [PROJECT_ROOT / "tests/dockertown/components/test-stack-file.yml"],
     )
     time.sleep(1)
     yield some_stack
@@ -55,7 +55,7 @@ def test_stack_ps_and_services(with_test_stack):
 def test_stack_variables():
     docker.stack.deploy(
         "other_stack",
-        [PROJECT_ROOT / "tests/pydock/components/test-stack-file.yml"],
+        [PROJECT_ROOT / "tests/dockertown/components/test-stack-file.yml"],
         variables={"SOME_VARIABLE": "hello-world"},
     )
 
@@ -73,7 +73,7 @@ def test_stack_env_files(tmp_path: Path):
     env_file.write_text('SOME_VARIABLE="--tls=true" # some var \n # some comment')
     third_stack = docker.stack.deploy(
         "third_stack",
-        [PROJECT_ROOT / "tests/pydock/components/test-stack-file.yml"],
+        [PROJECT_ROOT / "tests/dockertown/components/test-stack-file.yml"],
         env_files=[env_file],
     )
 
@@ -91,7 +91,7 @@ def test_deploy_not_swarm_manager():
     with pytest.raises(NotASwarmManager) as e:
         docker.stack.deploy(
             "some_stack",
-            [PROJECT_ROOT / "tests/pydock/components/test-stack-file.yml"],
+            [PROJECT_ROOT / "tests/dockertown/components/test-stack-file.yml"],
         )
 
     assert "not a swarm manager" in str(e.value).lower()

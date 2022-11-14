@@ -63,7 +63,7 @@ class SwarmCLI(DockerCLICaller):
         A example of how to initialize the whole swarm without leaving the manager
         if the manager has ssh access to the workers:
         ```python
-        from pydock import docker, DockerClient
+        from dockertown import docker, DockerClient
 
         worker_docker = DockerClient(host="ssh://worker_linux_user@worker_hostname")
         # Here the docker variable is connected to the local daemon

@@ -166,7 +166,7 @@ class Container(ReloadableObjectFromJson):
         return self._get_inspect_result().network_settings
 
     def __repr__(self):
-        return f"pydock.Container(id='{self.id[:12]}', name='{self.name}')"
+        return f"dockertown.Container(id='{self.id[:12]}', name='{self.name}')"
 
     # --------------------------------------------------------------------
     # public methods
@@ -399,7 +399,7 @@ class ContainerCLI(DockerCLICaller):
         Alias: `docker.copy(...)`
 
         ```python
-        from pydock import docker
+        from dockertown import docker
 
         docker.run("ubuntu", ["sleep", "infinity"], name="dodo", remove=True, detach=True)
 
@@ -765,7 +765,7 @@ class ContainerCLI(DockerCLICaller):
             Optional[str]
 
         # Raises
-            `pydock.exceptions.NoSuchContainer` if the container does not exists.
+            `dockertown.exceptions.NoSuchContainer` if the container does not exists.
         """
         full_cmd = self.docker_cmd + ["exec"]
 
@@ -828,7 +828,7 @@ class ContainerCLI(DockerCLICaller):
                 is not yet implemented.
 
         # Raises
-            `pydock.exceptions.NoSuchContainer` if the container does not exists.
+            `dockertown.exceptions.NoSuchContainer` if the container does not exists.
         """
         full_cmd = self.docker_cmd + ["container", "export"]
         full_cmd.add_simple_arg("--output", output)
@@ -857,11 +857,11 @@ class ContainerCLI(DockerCLICaller):
                 and/or IDs
 
         # Returns:
-            A `pydock.Container` object or a list of those
+            A `dockertown.Container` object or a list of those
             if a list of IDs was passed as input.
 
         # Raises
-            `pydock.exceptions.NoSuchContainer` if the container does not exists.
+            `dockertown.exceptions.NoSuchContainer` if the container does not exists.
         """
 
         if isinstance(x, list):
@@ -883,7 +883,7 @@ class ContainerCLI(DockerCLICaller):
             signal: The signal to send the container
 
         # Raises
-            `pydock.exceptions.NoSuchContainer` if the container does not exists.
+            `dockertown.exceptions.NoSuchContainer` if the container does not exists.
 
         """
         containers = to_list(containers)
@@ -932,7 +932,7 @@ class ContainerCLI(DockerCLICaller):
                 This function will then returns and iterator that will yield a
                 tuple `(source, content)` with `source` being `"stderr"` or
                 `"stdout"`. `content` is the content of the line as bytes.
-                Take a look at [the user guide](https://duckietown.github.io/pydock/user_guide/docker_run/#stream-the-output)
+                Take a look at [the user guide](https://duckietown.github.io/dockertown/user_guide/docker_run/#stream-the-output)
                 to have an example of the output.
 
         # Returns
@@ -940,7 +940,7 @@ class ContainerCLI(DockerCLICaller):
             if `stream=True`.
 
         # Raises
-            `pydock.exceptions.NoSuchContainer` if the container does not exists.
+            `dockertown.exceptions.NoSuchContainer` if the container does not exists.
 
         If you are a bit confused about `follow` and `stream`, here are some use cases.
 
@@ -978,7 +978,7 @@ class ContainerCLI(DockerCLICaller):
             all: If `True`, also returns containers that are not running.
 
         # Returns
-            A `List[pydock.Container]`
+            A `List[dockertown.Container]`
         """
         full_cmd = self.docker_cmd
         full_cmd += ["container", "list", "-q", "--no-trunc"]
@@ -1001,7 +1001,7 @@ class ContainerCLI(DockerCLICaller):
             containers: One or more containers to pause
 
         # Raises
-            `pydock.exceptions.NoSuchContainer` if the container does not exists.
+            `dockertown.exceptions.NoSuchContainer` if the container does not exists.
         """
         containers = to_list(containers)
         if containers == []:
@@ -1021,7 +1021,7 @@ class ContainerCLI(DockerCLICaller):
         """
         if isinstance(filter, list):
             raise TypeError(
-                "since pydock 0.38.0, the filter argument is expected to be "
+                "since dockertown 0.38.0, the filter argument is expected to be "
                 "a dict, not a list, please replace your function call by "
                 "docker.container.prune(filters={...})"
             )
@@ -1039,7 +1039,7 @@ class ContainerCLI(DockerCLICaller):
             new_name: The new name of the container.
 
         # Raises
-            `pydock.exceptions.NoSuchContainer` if the container does not exists.
+            `dockertown.exceptions.NoSuchContainer` if the container does not exists.
         """
         full_cmd = self.docker_cmd + ["container", "rename", str(container), new_name]
         run(full_cmd)
@@ -1059,7 +1059,7 @@ class ContainerCLI(DockerCLICaller):
                 If `int`, the unit is seconds.
 
         # Raises
-            `pydock.exceptions.NoSuchContainer` if the container does not exists.
+            `dockertown.exceptions.NoSuchContainer` if the container does not exists.
         """
         containers = to_list(containers)
         if not containers:
@@ -1093,7 +1093,7 @@ class ContainerCLI(DockerCLICaller):
             volumes: Remove anonymous volumes associated with the container
 
         # Raises
-            `pydock.exceptions.NoSuchContainer` if the container does not exists.
+            `dockertown.exceptions.NoSuchContainer` if the container does not exists.
         """
         containers = to_list(containers)
         if not containers:
@@ -1218,7 +1218,7 @@ class ContainerCLI(DockerCLICaller):
         the [`docker.run()` guide](../user_guide/docker_run.md).
 
         ```python
-        >>> from pydock import docker
+        >>> from dockertown import docker
         >>> returned_string = docker.run("hello-world")
         >>> print(returned_string)
 
@@ -1245,7 +1245,7 @@ class ContainerCLI(DockerCLICaller):
         ```
 
         ```python
-        >>> from pydock import docker
+        >>> from dockertown import docker
         >>> result_string = docker.run("ubuntu", ["ls", "/host"], volumes=[("/", "/host", "ro")])
         >>> print(result_string)
         bin
@@ -1290,7 +1290,7 @@ class ContainerCLI(DockerCLICaller):
             cpuset_cpus: CPUs in which to allow execution. Must be given as a list.
             cpuset_mems: MEMs in which to allow execution. Must be given as a list.
             detach: If `False`, returns the ouput of the container as a string.
-                If `True`, returns a `pydock.Container` object.
+                If `True`, returns a `dockertown.Container` object.
             dns_search: Set custom DNS search domains
             domainname: Container NIS domain name
             entrypoint: Overwrite the default ENTRYPOINT of the image
@@ -1359,7 +1359,7 @@ class ContainerCLI(DockerCLICaller):
 
         # Returns
             The container output as a string if detach is `False` (the default),
-            and a `pydock.Container` if detach is `True`.
+            and a `dockertown.Container` if detach is `True`.
         """
 
         image_cli_wrapper.ImageCLI(self.client_config)._pull_if_necessary(image)
@@ -1529,7 +1529,7 @@ class ContainerCLI(DockerCLICaller):
         """Starts one or more stopped containers.
 
         Aliases: `docker.start`, `docker.container.start`,
-        `pydock.Container.start`.
+        `dockertown.Container.start`.
 
         # Arguments
             containers: One or a list of containers.
@@ -1563,11 +1563,11 @@ class ContainerCLI(DockerCLICaller):
 
         Usage:
         ```python
-        from pydock import docker
+        from dockertown import docker
 
         docker.run("redis", detach=True)
         print(docker.stats())
-        # [<<class 'pydock.components.container.ContainerStats'> object,
+        # [<<class 'dockertown.components.container.ContainerStats'> object,
         # attributes are block_read=0, block_write=0, cpu_percentage=0.08,
         # container=e90ae41a5b17,
         # container_id=e90ae41a5b17df998584141692f1e361c485e8d00c37ee21fdc360d3523dd1c1,
@@ -1581,7 +1581,7 @@ class ContainerCLI(DockerCLICaller):
             all: Get the stats of all containers, not just running ones.
 
         # Returns
-            A `List[pydock.ContainerStats]`.
+            A `List[dockertown.ContainerStats]`.
         """
         full_cmd = self.docker_cmd + [
             "container",
@@ -1605,14 +1605,14 @@ class ContainerCLI(DockerCLICaller):
         Alias: `docker.stop(...)`
 
         Aliases: `docker.stop`, `docker.container.stop`,
-        `pydock.Container.stop`.
+        `dockertown.Container.stop`.
 
         # Arguments
             containers: One or a list of containers.
             time: Seconds to wait for stop before killing a container (default 10)
 
         # Raises
-            `pydock.exceptions.NoSuchContainer` if the container does not exists.
+            `dockertown.exceptions.NoSuchContainer` if the container does not exists.
         """
         containers = to_list(containers)
         if containers == []:
@@ -1644,10 +1644,10 @@ class ContainerCLI(DockerCLICaller):
         Alias: `docker.unpause(...)`
 
         # Arguments
-            x: One or more containers (name, id or `pydock.Container` object).
+            x: One or more containers (name, id or `dockertown.Container` object).
 
         # Raises
-            `pydock.exceptions.NoSuchContainer` if the container does not exists.
+            `dockertown.exceptions.NoSuchContainer` if the container does not exists.
         """
         x = to_list(x)
         if x == []:
@@ -1702,7 +1702,7 @@ class ContainerCLI(DockerCLICaller):
             restart: Restart policy to apply when a container exits (default "no")
 
         # Raises
-            `pydock.exceptions.NoSuchContainer` if the container does not exists.
+            `dockertown.exceptions.NoSuchContainer` if the container does not exists.
         """
         x = to_list(x)
         if x == []:
@@ -1774,7 +1774,7 @@ class ContainerCLI(DockerCLICaller):
         ```
 
         # Raises
-            `pydock.exceptions.NoSuchContainer` if the container does not exists.
+            `dockertown.exceptions.NoSuchContainer` if the container does not exists.
         """
         if x == []:
             # nothing to do
@@ -1792,7 +1792,7 @@ class ContainerCLI(DockerCLICaller):
         """Returns `True` if the container exists. `False` otherwise.
 
          It's just calling `docker.container.inspect(...)` and verifies that it doesn't throw
-         a `pydock.exceptions.NoSuchContainer`.
+         a `dockertown.exceptions.NoSuchContainer`.
 
         # Returns
             A `bool`

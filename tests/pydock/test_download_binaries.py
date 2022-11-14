@@ -1,7 +1,7 @@
 import platform
 
-from pydock import download_binaries
-from pydock.utils import run
+from dockertown import download_binaries
+from dockertown.utils import run
 
 
 def test_download_from_url(tmp_path):
@@ -29,7 +29,7 @@ def test_download_cli_from_cli():
         download_binaries.get_docker_binary_path_in_cache().unlink()
     except FileNotFoundError:
         pass
-    run(["pydock", "download-cli"])
+    run(["dockertown", "download-cli"])
     simple_command = [
         download_binaries.get_docker_binary_path_in_cache(),
         "run",

@@ -100,22 +100,22 @@ Sometimes, the CLI might not be available on the system, it can happen if you wa
 Docker from within a container with `-v /var/run/docker.sock:/var/run/docker.sock`, or if you
 want to connect to a remote daemon with the `host` argument.
 
-In this case, when using pydock, the CLI will be downloaded automatically 
+In this case, when using dockertown, the CLI will be downloaded automatically 
 (it's a single binary), and will be put in 
 ```python
-pathlib.Path.home() / ".cache/pydock/docker"
+pathlib.Path.home() / ".cache/dockertown/docker"
 ```
 Since it's not in the PATH and was not downloaded with the package manager, it's only seen and 
-used by pydock.
+used by dockertown.
 
 If you want to trigger the download manually (to avoid downloading the CLI at runtime),
 you can run from your shell:
 ```bash
-pydock download-cli
+dockertown download-cli
 ```
 
 # Handling an unavailable client
 
 Trying to use Pydock when it cannot find or download a Docker client binary
-will trigger a `pydock.ClientNotFoundError`. You can use a try-except around 
+will trigger a `dockertown.ClientNotFoundError`. You can use a try-except around 
 a first `docker.ps()` call to handle the case when Pydock won't work.

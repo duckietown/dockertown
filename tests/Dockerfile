@@ -23,7 +23,7 @@ RUN pip install -r /tmp/test-requirements.txt -r /tmp/requirements.txt
 
 #-----------------------------------------------------------------------------
 FROM python_dependencies as lint
-WORKDIR /pydock
+WORKDIR /dockertown
 COPY . .
 RUN flake8
 RUN isort --check ./
@@ -36,7 +36,7 @@ COPY --from=docker:20.10 /usr/local/bin/docker /usr/bin/
 COPY --from=get_buildx /docker-buildx /root/.docker/cli-plugins/
 COPY --from=get_compose /docker-compose /root/.docker/cli-plugins/
 
-WORKDIR /pydock
+WORKDIR /dockertown
 ENV HOME=/root
 
 COPY . .
@@ -51,9 +51,9 @@ FROM python_dependencies as tests_without_any_binary
 
 COPY --from=get_buildx /docker-buildx /root/.docker/cli-plugins/
 
-WORKDIR /pydock
+WORKDIR /dockertown
 COPY . .
 
 RUN pip install -e .
 
-CMD pytest -v --durations=10 ./tests/pydock/components/buildx
+CMD pytest -v --durations=10 ./tests/dockertown/components/buildx

@@ -1,7 +1,7 @@
 import pytest
 
-from pydock.components.buildx.imagetools.models import Manifest
-from pydock.test_utils import get_all_jsons
+from dockertown.components.buildx.imagetools.models import Manifest
+from dockertown.test_utils import get_all_jsons
 
 
 @pytest.mark.parametrize("json_file", get_all_jsons("manifests"))

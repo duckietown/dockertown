@@ -99,7 +99,7 @@ class ContextCLI(DockerCLICaller):
         """List all Docker contexts available
 
         # Returns
-            `List[pydock.Context]`
+            `List[dockertown.Context]`
         """
 
         full_cmd = self.docker_cmd + ["context", "list", "--quiet"]

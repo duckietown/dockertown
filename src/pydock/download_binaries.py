@@ -10,7 +10,7 @@ from tqdm import tqdm
 DOCKER_VERSION = "20.10.5"
 BUILDX_VERSION = "0.5.1"
 
-CACHE_DIR = Path.home() / ".cache" / "pydock"
+CACHE_DIR = Path.home() / ".cache" / "dockertown"
 
 TEMPLATE_CLI = (
     "https://download.docker.com/{os}/static/stable/{arch}/docker-{version}.tgz"
@@ -94,8 +94,8 @@ def get_user_os():
             f"Unknown OS: {user_os}, cannot determine which Docker CLI binary file to "
             f"download. \n"
             f"Please open an issue at \n"
-            f"https://github.com/duckietown/pydock/issues \n"
-            f"and in the meantime, install Docker manually to make pydock "
+            f"https://github.com/duckietown/dockertown/issues \n"
+            f"and in the meantime, install Docker manually to make dockertown "
             f"work."
         )
 
@@ -122,7 +122,7 @@ def get_arch_for_docker_cli_url():
             f"The architecture detected on your system is `{arch}`, the list of "
             f"available architectures is {list(arch_mapping.values())}. \n"
             f"Please open an issue at \n"
-            f"https://github.com/duckietown/pydock/issues "
+            f"https://github.com/duckietown/dockertown/issues "
             f"and make sure to copy past this error message. \n"
             f"In the meantime, install Docker manually on your system."
         )

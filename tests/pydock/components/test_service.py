@@ -2,10 +2,10 @@ import time
 
 import pytest
 
-from pydock import docker
-from pydock.components.service.models import ServiceInspectResult
-from pydock.exceptions import NoSuchService, NotASwarmManager
-from pydock.test_utils import get_all_jsons
+from dockertown import docker
+from dockertown.components.service.models import ServiceInspectResult
+from dockertown.exceptions import NoSuchService, NotASwarmManager
+from dockertown.test_utils import get_all_jsons
 
 
 @pytest.mark.parametrize("json_file", get_all_jsons("services"))

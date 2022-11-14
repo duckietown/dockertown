@@ -1,9 +1,9 @@
 import pytest
 
-from pydock import docker
-from pydock.components.image.models import ImageInspectResult
-from pydock.exceptions import DockerException, NoSuchImage
-from pydock.test_utils import get_all_jsons, random_name
+from dockertown import docker
+from dockertown.components.image.models import ImageInspectResult
+from dockertown.exceptions import DockerException, NoSuchImage
+from dockertown.test_utils import get_all_jsons, random_name
 
 
 @pytest.mark.parametrize("json_file", get_all_jsons("images"))

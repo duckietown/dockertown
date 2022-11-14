@@ -24,8 +24,8 @@ All exceptions will have these 4 attributes:
 
 ```python
 import logging
-from pydock import DockerClient
-from pydock.exceptions import DockerException
+from dockertown import DockerClient
+from dockertown.exceptions import DockerException
 
 client = DockerClient(compose_files=["/tmp/docker-compose.yml"])
 try:

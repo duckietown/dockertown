@@ -123,7 +123,7 @@ class Image(ReloadableObjectFromJson):
         return self._get_inspect_result().metadata
 
     def __repr__(self):
-        return f"pydock.Image(id='{self.id[:20]}', tags={self.repo_tags})"
+        return f"dockertown.Image(id='{self.id[:20]}', tags={self.repo_tags})"
 
     def remove(self, force: bool = False, prune: bool = True):
         """Remove this Docker image.
@@ -177,7 +177,7 @@ class Image(ReloadableObjectFromJson):
         """Returns `True` if the docker image exists and `False` if it doesn't exists.
 
         Note that you might have done `docker.image.remove("some_tag")` and the image
-        might still exists because pydock references images by id, not by tag.
+        might still exists because dockertown references images by id, not by tag.
 
          See the `docker.image.exists` command for information about the arguments.
         """
@@ -219,7 +219,7 @@ class ImageCLI(DockerCLICaller):
         * [Proposal: make BuildKit the default builder on Linux](https://github.com/moby/moby/issues/40379)
         * [Deprecated Engine Features: Legacy builder for Linux images](https://github.com/docker/cli/blob/master/docs/deprecated.md#legacy-builder-for-linux-images)
 
-        A `pydock.Image` is returned, even when using multiple tags.
+        A `dockertown.Image` is returned, even when using multiple tags.
         That is because it will produce a single image with multiple tags.
 
         # Arguments
@@ -237,7 +237,7 @@ class ImageCLI(DockerCLICaller):
             target: Set the target build stage to build.
 
         # Returns
-            A `pydock.Image`
+            A `dockertown.Image`
         """
         # to make it easier to write and read tests, the tests of this function
         # are also grouped with the tests of "docker.build()".
@@ -300,14 +300,14 @@ class ImageCLI(DockerCLICaller):
         ...
 
     def inspect(self, x: Union[str, List[str]]) -> Union[Image, List[Image]]:
-        """Creates a `pydock.Image` object.
+        """Creates a `dockertown.Image` object.
 
         # Returns
-            `pydock.Image`, or `List[pydock.Image]` if the input
+            `dockertown.Image`, or `List[dockertown.Image]` if the input
             was a list of strings.
 
         # Raises
-            `pydock.exceptions.NoSuchImage` if one of the images does not exists.
+            `dockertown.exceptions.NoSuchImage` if one of the images does not exists.
 
         """
         if isinstance(x, list):
@@ -319,7 +319,7 @@ class ImageCLI(DockerCLICaller):
         """Returns `True` if the image exists. `False` otherwise.
 
          It's just calling `docker.image.inspect(...)` and verifies that it doesn't throw
-         a `pydock.exceptions.NoSuchImage`.
+         a `dockertown.exceptions.NoSuchImage`.
 
         # Returns
             A `bool`
@@ -400,7 +400,7 @@ class ImageCLI(DockerCLICaller):
         Note that each image may have multiple tags.
 
         # Returns
-            A `List[pydock.Image]` object.
+            A `List[dockertown.Image]` object.
         """
         # previously the signature was
         # def list(self,filters: Dict[str, str] = {}) -> List[Image]:
@@ -457,8 +457,8 @@ class ImageCLI(DockerCLICaller):
             quiet: If you don't want to see the progress bars.
 
         # Returns:
-            The Docker image loaded (`pydock.Image` object).
-            If a list was passed as input, then a `List[pydock.Image]` will
+            The Docker image loaded (`dockertown.Image` object).
+            If a list was passed as input, then a `List[dockertown.Image]` will
             be returned.
         """
 
@@ -493,13 +493,13 @@ class ImageCLI(DockerCLICaller):
 
         # Arguments
             x: Tag(s) or repo(s) to push. Can be a string or a list of strings.
-                If it's a list of string, pydock will push all the images with
+                If it's a list of string, dockertown will push all the images with
                 multiple threads. The progress bars might look strange as multiple
                 processes are drawing on the terminal at the same time.
             quiet: If you don't want to see the progress bars.
 
         # Raises
-            `pydock.exceptions.NoSuchImage` if one of the images does not exists.
+            `dockertown.exceptions.NoSuchImage` if one of the images does not exists.
         """
         x = to_list(x)
 
@@ -537,12 +537,12 @@ class ImageCLI(DockerCLICaller):
 
         # Arguments
             x: Single image or list of Docker images to remove. You can use tags or
-                `pydock.Image` objects.
+                `dockertown.Image` objects.
             force: Force removal of the image
             prune: Delete untagged parents
 
         # Raises
-            `pydock.exceptions.NoSuchImage` if one of the images does not exists.
+            `dockertown.exceptions.NoSuchImage` if one of the images does not exists.
 
         """
 
@@ -575,7 +575,7 @@ class ImageCLI(DockerCLICaller):
             `Optional[Iterator[bytes]]`. If output is a path, nothing is returned.
 
         # Raises
-            `pydock.exceptions.NoSuchImage` if one of the images does not exists.
+            `dockertown.exceptions.NoSuchImage` if one of the images does not exists.
 
         # Example
 
@@ -583,7 +583,7 @@ class ImageCLI(DockerCLICaller):
         daemon. We assume that the remote machine has an ssh access:
 
         ```python
-        from pydock import DockerClient
+        from dockertown import DockerClient
 
         local_docker = DockerClient()
         remote_docker = DockerClient(host="ssh://my_user@186.167.32.84")
@@ -636,7 +636,7 @@ class ImageCLI(DockerCLICaller):
             new_tag: The tag to add to the Docker image.
 
         # Raises
-            `pydock.exceptions.NoSuchImage` if the image does not exists.
+            `dockertown.exceptions.NoSuchImage` if the image does not exists.
         """
         full_cmd = self.docker_cmd + [
             "image",

@@ -1,6 +1,6 @@
-tag=pydock
+tag=dockertown
 
-regular_packages=pydock
+regular_packages=dockertown
 test_packages=pydock_tests
 cover_packages=$(test_packages),$(regular_packages)
 
@@ -78,7 +78,7 @@ run:
 #
 run-with-mounted-src:
 	mkdir -p out-docker
-	docker run -it -v $(PWD)/src:/pydock/src:ro -v $(PWD)/out-docker:/out $(tag) dt-pc-demo
+	docker run -it -v $(PWD)/src:/dockertown/src:ro -v $(PWD)/out-docker:/out $(tag) dt-pc-demo
 
 
 coverage-report:

@@ -29,12 +29,12 @@ class DockerClient(DockerCLICaller):
 
     Note that
     ```python
-    from pydock import docker
+    from dockertown import docker
     print(docker.run("hello-world"))
     ```
     is equivalent to
     ```python
-    from pydock import DockerClient
+    from dockertown import DockerClient
     docker = DockerClient()
     print(docker.run("hello-world")
     ```

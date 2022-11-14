@@ -24,7 +24,7 @@ class Stack:
             return False
 
     def __repr__(self):
-        return f"pydock.Stack(name='{self.name}')"
+        return f"dockertown.Stack(name='{self.name}')"
 
     def remove(self) -> None:
         StackCLI(self.client_config).remove(self)
@@ -75,7 +75,7 @@ class StackCLI(DockerCLICaller):
                 environment variables for this.
 
         # Returns
-            A `pydock.Stack` object.
+            A `dockertown.Stack` object.
         """
         full_cmd = self.docker_cmd + ["stack", "deploy"]
 
@@ -93,10 +93,10 @@ class StackCLI(DockerCLICaller):
         return Stack(self.client_config, name)
 
     def list(self) -> List[Stack]:
-        """Returns a list of `pydock.Stack`
+        """Returns a list of `dockertown.Stack`
 
         # Returns
-            A `List[pydock.Stack]`.
+            A `List[dockertown.Stack]`.
         """
         full_cmd = self.docker_cmd + ["stack", "ls", "--format", "{{.Name}}"]
         stacks_names = run(full_cmd).splitlines()
@@ -106,7 +106,7 @@ class StackCLI(DockerCLICaller):
         """Returns the list of swarm tasks in this stack.
 
         ```python
-        from pydock import docker
+        from dockertown import docker
 
         tasks = docker.stack.ps("my-stack")
         print(tasks[0].desired_state)
@@ -114,10 +114,10 @@ class StackCLI(DockerCLICaller):
         ```
 
         # Arguments
-            x: A stack . It can be name or a `pydock.Stack` object.
+            x: A stack . It can be name or a `dockertown.Stack` object.
 
         # Returns
-            `List[pydock.Task]`
+            `List[dockertown.Task]`
         """
         full_cmd = self.docker_cmd + ["stack", "ps", "--quiet", "--no-trunc", x]
 
@@ -146,7 +146,7 @@ class StackCLI(DockerCLICaller):
             stack: A docker stack or the name of a stack.
 
         # Returns
-            A `List[pydock.Stack]`
+            A `List[dockertown.Stack]`
         """
         full_cmd = self.docker_cmd + ["stack", "services", "--quiet", stack]
         ids = run(full_cmd).splitlines()

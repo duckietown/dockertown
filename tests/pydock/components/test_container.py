@@ -7,12 +7,12 @@ from pathlib import Path
 
 import pytest
 
-import pydock
-from pydock import Image, docker
-from pydock.components.container.cli_wrapper import ContainerStats
-from pydock.components.container.models import ContainerInspectResult, ContainerState
-from pydock.exceptions import DockerException, NoSuchContainer
-from pydock.test_utils import get_all_jsons, random_name
+import dockertown
+from dockertown import Image, docker
+from dockertown.components.container.cli_wrapper import ContainerStats
+from dockertown.components.container.models import ContainerInspectResult, ContainerState
+from dockertown.exceptions import DockerException, NoSuchContainer
+from dockertown.test_utils import get_all_jsons, random_name
 
 
 @pytest.mark.parametrize("json_file", get_all_jsons("containers"))
@@ -363,7 +363,7 @@ def test_context_manager_with_create():
         with docker.container.create(
             "busybox:1", ["sleep", "infinity"], name=container_name
         ) as c:
-            assert isinstance(c, pydock.Container)
+            assert isinstance(c, dockertown.Container)
             raise ArithmeticError
 
     assert container_name not in [x.name for x in docker.container.list(all=True)]

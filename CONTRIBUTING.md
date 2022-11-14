@@ -34,7 +34,7 @@ http://localhost:8000
 
 ## Running the tests
 
-Install all dependencies and install pydock in editable mode:
+Install all dependencies and install dockertown in editable mode:
 ```
 pip install -r requirements.txt -r tests/test-requirements.txt
 pip install -e ./
@@ -49,7 +49,7 @@ pytest -v ./tests/
 
 ## Exploring the codebase
 
-The sources are in the `pydock` directory. Everytime a class has something to 
+The sources are in the `dockertown` directory. Everytime a class has something to 
 do with the Docker daemon, a `client_config` attribute is there and must be passed around.
 
 This `client_config` tells the Docker CLI how to connect to the daemon. 
@@ -64,10 +64,10 @@ The structure is the following for calling `docker image ...`.
 
 `ImageCLI` is in charge of calling the `docker image` commande. This class appears when you call
 ```python
-from pydock import docker
+from dockertown import docker
 print(docker.image)
 ```
-`ImageCLI` is in `pydock/components/image/cli_wrapper.py`.
+`ImageCLI` is in `dockertown/components/image/cli_wrapper.py`.
 
 `Image` is in charge of holding all the metadata of a Docker image and has all 
 the attributes that you could find by doing `docker image inspect ...`.
@@ -75,7 +75,7 @@ the attributes that you could find by doing `docker image inspect ...`.
 It has some methods for convenience. For example:
 
 ```python
-from pydock import docker
+from dockertown import docker
 
 my_ubuntu = docker.pull("ubuntu")
 
@@ -85,4 +85,4 @@ docker.image.remove(my_ubuntu)
 ```
 
 Since `Image` has all the information you can find with `docker image inspect ...`, we need 
-to parse the json output. All parsing models are found in `pydock/components/image/models.py`.
+to parse the json output. All parsing models are found in `dockertown/components/image/models.py`.

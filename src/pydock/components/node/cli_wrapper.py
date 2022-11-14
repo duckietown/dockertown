@@ -65,7 +65,7 @@ class Node(ReloadableObjectFromJson):
         return self._get_inspect_result().manager_status
 
     def __repr__(self):
-        return f"pydock.Node(id='{self.id[:12]}', hostname='{self.description.hostname}', role='{self.spec.role}')"
+        return f"dockertown.Node(id='{self.id[:12]}', hostname='{self.description.hostname}', role='{self.spec.role}')"
 
     def update(
         self,
@@ -87,7 +87,7 @@ class Node(ReloadableObjectFromJson):
         """Returns the list of tasks running on this node
 
         # Returns
-            A `List[pydock.Task]` object.
+            A `List[dockertown.Task]` object.
 
         """
         return NodeCLI(self.client_config).ps(self)
@@ -118,14 +118,14 @@ class NodeCLI(DockerCLICaller):
         ...
 
     def inspect(self, x: Union[str, List[str]]) -> Union[Node, List[Node]]:
-        """Returns a `pydock.Node` object from a string
+        """Returns a `dockertown.Node` object from a string
         (id or hostname of the node)
 
         # Arguments
             x: One id or hostname or a list of ids or hostnames
 
         # Returns
-            One or a list of `pydock.Node`
+            One or a list of `dockertown.Node`
         """
         if isinstance(x, str):
             return Node(self.client_config, x)
@@ -136,7 +136,7 @@ class NodeCLI(DockerCLICaller):
         """Returns the list of nodes in this swarm.
 
         # Returns
-            A `List[pydock.Node]`
+            A `List[dockertown.Node]`
         """
         full_cmd = self.docker_cmd + ["node", "list", "--quiet"]
         all_ids = run(full_cmd).splitlines()
@@ -160,7 +160,7 @@ class NodeCLI(DockerCLICaller):
         """Returns the list of swarm tasks running on one or more nodes.
 
         ```python
-        from pydock import docker
+        from dockertown import docker
 
         tasks = docker.node.ps("my-node-name")
         print(tasks[0].desired_state)
@@ -168,12 +168,12 @@ class NodeCLI(DockerCLICaller):
         ```
 
         # Arguments
-            x: One or more nodes (can be id, name or `pydock.Node` object.).
+            x: One or more nodes (can be id, name or `dockertown.Node` object.).
                 If the argument is not provided, it defaults to the current node.
                 An empty list means an empty list will also be returned.
 
         # Returns
-            `List[pydock.Task]`
+            `List[dockertown.Task]`
         """
         if x == []:
             return []
@@ -197,7 +197,7 @@ class NodeCLI(DockerCLICaller):
 
         # Arguments
             x: One node or a list of nodes. You can use the id or the hostname of a node.
-                You can also use a `pydock.Node`.
+                You can also use a `dockertown.Node`.
             force: Force remove a node from the swarm
         """
         full_cmd = self.docker_cmd + ["node", "remove"]
@@ -218,7 +218,7 @@ class NodeCLI(DockerCLICaller):
         """Updates a Swarm node.
 
         # Arguments
-            node: The node to update, you can use a string or a `pydock.Node`
+            node: The node to update, you can use a string or a `dockertown.Node`
                 object.
             availability: Availability of the node ("active"|"pause"|"drain")
             labels_add: Remove a node label if exists

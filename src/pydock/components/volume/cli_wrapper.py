@@ -71,7 +71,7 @@ class Volume(ReloadableObjectFromJson):
         return self._get_inspect_result().options
 
     def __repr__(self):
-        return f"pydock.Volume(name='{self.name}', driver={self.driver})"
+        return f"dockertown.Volume(name='{self.name}', driver={self.driver})"
 
     def remove(self) -> None:
         """Removes this volume"""
@@ -155,7 +155,7 @@ class VolumeCLI(DockerCLICaller):
         """Returns `True` if the volume exists. `False` otherwise.
 
          It's just calling `docker.volume.inspect(...)` and verifies that it doesn't throw
-         a `pydock.exceptions.NoSuchVolume`.
+         a `dockertown.exceptions.NoSuchVolume`.
 
         # Returns
             A `bool`
@@ -176,7 +176,7 @@ class VolumeCLI(DockerCLICaller):
                 An example `filters=dict(dangling=1, driver="local")`.
 
         # Returns
-            `List[pydock.Volume]`
+            `List[dockertown.Volume]`
         """
 
         full_cmd = self.docker_cmd + ["volume", "list", "--quiet"]
@@ -237,7 +237,7 @@ class VolumeCLI(DockerCLICaller):
             options: Set driver specific options
 
         # Returns
-            A `pydock.Volume`, the new volume.
+            A `dockertown.Volume`, the new volume.
         """
         new_volume = self.create(new_volume_name, driver, labels, options)
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -255,7 +255,7 @@ class VolumeCLI(DockerCLICaller):
         # Arguments
             source: If `source` is a directory/file inside a Docker volume,
                 a tuple `(my_volume, path_in_volume)` must be provided. The volume
-                can be a `pydock.Volume` or a volume name as `str`. The path
+                can be a `dockertown.Volume` or a volume name as `str`. The path
                 can be a `pathlib.Path` or a `str`. If `source` is  a local directory,
                 a `pathlib.Path` or `str` should be provided. End the source path with
                 `/.` if you want to copy the directory content in another directory.

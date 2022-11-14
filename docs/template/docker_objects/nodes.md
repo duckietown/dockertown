@@ -4,7 +4,7 @@ Nodes in Docker swarm
 
 Don't use the constructor directly. Instead use 
 ```python
-from pydock import docker
+from dockertown import docker
 
 my_docker_image = docker.node.inspect("my-node-name")
 
@@ -13,7 +13,7 @@ list_of_nodes = docker.node.list()
 For type hints, use this
 
 ```python
-from pydock import Node
+from dockertown import Node
 
 def print_state(node: Node):
     print(node.status.state)
@@ -32,7 +32,7 @@ and click on "200 No error".
 An example is worth many lines of descriptions.
 
 ```
-In [1]: from pydock import docker
+In [1]: from dockertown import docker
 
 In [2]: docker.swarm.init()
 

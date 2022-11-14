@@ -84,7 +84,7 @@ class Task(ReloadableObjectFromJson):
         return self._get_inspect_result().desired_state
 
     def __repr__(self):
-        return f"pydock.Image(id='{self.id[:12]}', name={self.name})"
+        return f"dockertown.Image(id='{self.id[:12]}', name={self.name})"
 
 
 class TaskCLI(DockerCLICaller):
@@ -92,13 +92,13 @@ class TaskCLI(DockerCLICaller):
         """Returns all tasks in the swarm
 
         # Returns
-            `List[pydock.Task]`
+            `List[dockertown.Task]`
         """
         service_cli = ServiceCLI(self.client_config)
         return service_cli.ps(service_cli.list())
 
     def inspect(self, x: Union[str, List[str]]) -> Union[Task, List[Task]]:
-        """Returns a `pydock.Task` object from its ID."""
+        """Returns a `dockertown.Task` object from its ID."""
         if isinstance(x, str):
             return Task(self.client_config, x)
         else:

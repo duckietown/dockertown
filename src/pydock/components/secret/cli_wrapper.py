@@ -52,10 +52,10 @@ class SecretCLI(DockerCLICaller):
         labels: Dict[str, str] = {},
         template_driver: Optional[str] = None,
     ) -> Secret:
-        """Creates a `pydock.Secret`.
+        """Creates a `dockertown.Secret`.
 
         # Returns
-            A `pydock.Secret` object.
+            A `dockertown.Secret` object.
         """
         full_cmd = self.docker_cmd + ["secret", "create"]
         full_cmd.add_simple_arg("--driver", driver)
@@ -65,7 +65,7 @@ class SecretCLI(DockerCLICaller):
         return Secret(self.client_config, run(full_cmd), is_immutable_id=True)
 
     def inspect(self, x: Union[str, List[str]]) -> Union[Secret, List[Secret]]:
-        """Returns one or more `pydock.Secret` based on an ID or name.
+        """Returns one or more `dockertown.Secret` based on an ID or name.
 
         # Arguments
             x: One or more IDs/names.
@@ -76,7 +76,7 @@ class SecretCLI(DockerCLICaller):
             return Secret(self.client_config, x)
 
     def list(self, filters: Dict[str, str] = {}) -> List[Secret]:
-        """Returns all secrets as a `List[pydock.Secret]`."""
+        """Returns all secrets as a `List[dockertown.Secret]`."""
         full_cmd = self.docker_cmd + ["secret", "list", "--quiet"]
         full_cmd.add_args_list("--filter", format_dict_for_cli(filters))
         ids = run(full_cmd).splitlines()
@@ -87,7 +87,7 @@ class SecretCLI(DockerCLICaller):
 
         # Arguments
             x: One or more secrets.
-                Name, ids or `pydock.Secret` objects are valid inputs.
+                Name, ids or `dockertown.Secret` objects are valid inputs.
         """
         if x == []:
             return

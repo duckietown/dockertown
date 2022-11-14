@@ -88,7 +88,7 @@ class ClientConfig:
                     "If you want to trigger the download of the client binary file "
                     "manually (for example if you want to do it in a Dockerfile), "
                     "you can run the following command:\n "
-                    "$ pydock download-cli \n"
+                    "$ dockertown download-cli \n"
                 )
                 download_docker_cli()
             return get_docker_binary_path_in_cache()
@@ -245,8 +245,8 @@ class ReloadableObjectFromJson(ReloadableObject):
 
             raise ParsingError(
                 f"There was an error parsing the json response from the Docker daemon. \n"
-                f"This is a bug with pydock itself. Please head to \n"
-                f"https://github.com/duckietown/pydock/issues \n"
+                f"This is a bug with dockertown itself. Please head to \n"
+                f"https://github.com/duckietown/dockertown/issues \n"
                 f"and open an issue. You should copy this error message and \n"
                 f"the json response from the Docker daemon. The json response was put \n"
                 f"in {json_response_file} because it's a bit too big to be printed \n"

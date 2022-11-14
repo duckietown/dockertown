@@ -2,7 +2,7 @@
 
 Don't use the constructor directly. Instead use 
 ```python
-from pydock import docker
+from dockertown import docker
 
 my_container = docker.container.inspect("my-container-name")
 
@@ -14,7 +14,7 @@ if my_container.state.running:
 For type hints, use this
 
 ```python
-from pydock import Container
+from dockertown import Container
 
 def print_dodo(container: Container):
     print(container.execute(["echo", "dodo"]))
@@ -32,7 +32,7 @@ An example is worth many lines of descriptions.
 
 
 ```
-In [1]: from pydock import docker
+In [1]: from dockertown import docker
 
 In [2]: container = docker.run("ubuntu", ["sleep", "infinity"], detach=True)
 

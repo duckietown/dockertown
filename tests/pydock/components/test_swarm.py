@@ -2,8 +2,8 @@ from datetime import timedelta
 
 import pytest
 
-from pydock import docker
-from pydock.exceptions import NotASwarmManager
+from dockertown import docker
+from dockertown.exceptions import NotASwarmManager
 
 
 @pytest.mark.usefixtures("swarm_mode")

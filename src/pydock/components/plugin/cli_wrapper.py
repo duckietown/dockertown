@@ -58,7 +58,7 @@ class Plugin(ReloadableObjectFromJson):
         return PluginCLI(self.client_config)
 
     def __repr__(self):
-        return f"pydock.Plugin(id='{self.id[:12]}', name='{self.name}')"
+        return f"dockertown.Plugin(id='{self.id[:12]}', name='{self.name}')"
 
     def disable(self, force: bool = False) -> None:
         """Disable this plugin"""
@@ -145,14 +145,14 @@ class PluginCLI(DockerCLICaller):
         ...
 
     def inspect(self, x: Union[str, List[str]]) -> Union[Plugin, List[Plugin]]:
-        """Returns a `pydock.Plugin` object from a string
+        """Returns a `dockertown.Plugin` object from a string
         (name or id of the plugin)
 
         # Arguments
             x: One id or hostname or a list of name or ids
 
         # Returns
-            One or a list of `pydock.Plugin`
+            One or a list of `dockertown.Plugin`
         """
         if isinstance(x, str):
             return Plugin(self.client_config, x)
@@ -180,7 +180,7 @@ class PluginCLI(DockerCLICaller):
             disable_content_trust: Skip image verification (default `True`)
 
         # Returns
-            A `pydock.Plugin`.
+            A `dockertown.Plugin`.
         """
         full_cmd = self.docker_cmd + ["plugin", "install", "--grant-all-permissions"]
         full_cmd.add_simple_arg("--alias", alias)
@@ -196,7 +196,7 @@ class PluginCLI(DockerCLICaller):
         return Plugin(self.client_config, plugin_name)
 
     def list(self) -> List[Plugin]:
-        """Returns a `List[pydock.Plugin` that are installed on the daemon."""
+        """Returns a `List[dockertown.Plugin` that are installed on the daemon."""
         full_cmd = self.docker_cmd + [
             "plugin",
             "list",

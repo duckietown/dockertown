@@ -1,6 +1,6 @@
 import pytest
 
-from pydock import docker
+from dockertown import docker
 
 
 @pytest.mark.usefixtures("swarm_mode")

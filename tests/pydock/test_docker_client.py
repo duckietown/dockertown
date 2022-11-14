@@ -3,8 +3,8 @@ from pathlib import Path
 
 import pytest
 
-from pydock import DockerClient, docker
-from pydock.exceptions import DockerException
+from dockertown import DockerClient, docker
+from dockertown.exceptions import DockerException
 
 
 def test_version():

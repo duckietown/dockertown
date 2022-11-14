@@ -92,7 +92,7 @@ class Network(ReloadableObjectFromJson):
         return self._get_inspect_result().config_only
 
     def __repr__(self):
-        return f"pydock.Network(id='{self.id[:12]}', name={self.name})"
+        return f"dockertown.Network(id='{self.id[:12]}', name={self.name})"
 
     def remove(self) -> None:
         """Removes this Docker network.
@@ -101,7 +101,7 @@ class Network(ReloadableObjectFromJson):
         make sure the network is deleted even if an exception is raised.
 
         ```python
-        from pydock import docker
+        from dockertown import docker
 
         with docker.network.create("some_name") as my_net:
             docker.run(
@@ -168,7 +168,7 @@ class NetworkCLI(DockerCLICaller):
             name: The name of the network
 
         # Returns
-            A `pydock.Network`.
+            A `dockertown.Network`.
         """
         full_cmd = self.docker_cmd + ["network", "create"]
         full_cmd.add_flag("--attachable", attachable)

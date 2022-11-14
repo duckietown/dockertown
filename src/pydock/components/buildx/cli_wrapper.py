@@ -65,7 +65,7 @@ class Builder(ReloadableObject):
         return self._get_inspect_result().platforms
 
     def __repr__(self):
-        return f"pydock.Builder(name='{self.name}', driver='{self.driver}')"
+        return f"dockertown.Builder(name='{self.name}', driver='{self.driver}')"
 
     def remove(self):
         """Removes this builder. After this operation the builder cannot be used anymore.
@@ -74,7 +74,7 @@ class Builder(ReloadableObject):
         you exit the context manager.
 
         ```python
-        from pydock import docker
+        from dockertown import docker
 
         buildx_builder = docker.buildx.create(use=True)
         with buildx_builder:
@@ -142,7 +142,7 @@ class BuildxCLI(DockerCLICaller):
 
 
         ```python
-        from pydock import docker
+        from dockertown import docker
 
         # returns the config used and runs the builds
         config = docker.buildx.bake(["my_target1", "my_target2"], load=True)
@@ -227,7 +227,7 @@ class BuildxCLI(DockerCLICaller):
 
         Alias: `docker.build(...)`
 
-        A `pydock.Image` is returned, even when using multiple tags.
+        A `dockertown.Image` is returned, even when using multiple tags.
         That is because it will produce a single image with multiple tags.
         If no image is loaded into the Docker daemon (if `push=True` for ex),
         then `None` is returned.
@@ -258,7 +258,7 @@ class BuildxCLI(DockerCLICaller):
             labels: Dict of labels to add to the image.
                 `labels={"very-secure": "1", "needs-gpu": "0"}` for example.
             load: Shortcut for `output=dict(type="docker")` If `True`,
-                `docker.buildx.build` will return a `pydock.Image`.
+                `docker.buildx.build` will return a `dockertown.Image`.
             network: which network to use when building the Docker image
             output: Output destination
                 (format: `output={"type": "local", "dest": "path"}`
@@ -282,7 +282,7 @@ class BuildxCLI(DockerCLICaller):
                 You can then read the logs as they arrive.
 
         # Returns
-            A `pydock.Image` if a Docker image is loaded
+            A `dockertown.Image` if a Docker image is loaded
             in the daemon after the build (the default behavior when
             calling `docker.build(...)`). Otherwise, `None`.
         """
@@ -426,7 +426,7 @@ class BuildxCLI(DockerCLICaller):
             use: Set the current builder instance to this builder
 
         # Returns
-            A `pydock.Builder` object.
+            A `dockertown.Builder` object.
         """
         full_cmd = self.docker_cmd + ["buildx", "create"]
 
@@ -456,12 +456,12 @@ class BuildxCLI(DockerCLICaller):
                 the builder that has this name is returned.
 
         # Returns
-            A `pydock.Builder` object.
+            A `dockertown.Builder` object.
         """
         return Builder(self.client_config, x, is_immutable_id=False)
 
     def list(self) -> List[Builder]:
-        """Returns the list of `pydock.Builder` available."""
+        """Returns the list of `dockertown.Builder` available."""
         full_cmd = self.docker_cmd + ["buildx", "ls"]
         output = run(full_cmd)
         lines = output.splitlines()
@@ -530,7 +530,7 @@ class BuildxCLI(DockerCLICaller):
         """Returns the docker buildx version as a string.
 
         ```python
-        from pydock import docker
+        from dockertown import docker
 
         version = docker.buildx.version()
         print(version)

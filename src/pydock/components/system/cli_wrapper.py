@@ -35,10 +35,10 @@ class SystemCLI(DockerCLICaller):
     def disk_free(self) -> DiskFreeResult:
         """Give information about the disk usage of the Docker daemon.
 
-        Returns a `pydock.DiskFreeResult` object.
+        Returns a `dockertown.DiskFreeResult` object.
 
         ```python
-        from pydock import docker
+        from dockertown import docker
         disk_free_result = docker.system.disk_free()
         print(disk_free_result.images.active)  #int
         print(disk_free_result.containers.reclaimable)  # int, number of bytes
@@ -70,7 +70,7 @@ class SystemCLI(DockerCLICaller):
         For example
 
         ```python
-        from pydock import docker
+        from dockertown import docker
         from datetime import datetime, timedelta
 
 
@@ -123,12 +123,12 @@ class SystemCLI(DockerCLICaller):
         """Returns diverse information about the Docker client and daemon.
 
         # Returns
-            A `pydock.SystemInfo` object
+            A `dockertown.SystemInfo` object
 
         As an example
 
         ```python
-        from pydock import docker
+        from dockertown import docker
 
         info = docker.system.info()
         print(info.images)

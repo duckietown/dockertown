@@ -18,6 +18,6 @@ The legacy builder is still available by calling [`docker.legacy_build()`](image
 
 Some resources on the matter:
 
-* [Discussion about supporting the legacy builder in Pydock](https://github.com/duckietown/pydock/issues/345)
+* [Discussion about supporting the legacy builder in Pydock](https://github.com/duckietown/dockertown/issues/345)
 * [Proposal: make BuildKit the default builder on Linux](https://github.com/moby/moby/issues/40379)
 * [Deprecated Engine Features: Legacy builder for Linux images](https://github.com/docker/cli/blob/master/docs/deprecated.md#legacy-builder-for-linux-images)

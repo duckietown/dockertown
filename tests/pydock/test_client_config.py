@@ -2,8 +2,8 @@ from pathlib import Path
 
 import pytest
 
-from pydock import docker
-from pydock.client_config import ParsingError
+from dockertown import docker
+from dockertown.client_config import ParsingError
 
 fake_json_message = """
 [
@@ -24,14 +24,14 @@ fake_json_message = """
 
 def test_pretty_exception_message_and_report(mocker):
     mocker.patch(
-        "pydock.components.volume.cli_wrapper.Volume._fetch_inspect_result_json",
+        "dockertown.components.volume.cli_wrapper.Volume._fetch_inspect_result_json",
         lambda x, y: fake_json_message,
     )
     with pytest.raises(ParsingError) as err:
         docker.volume.inspect("random_volume")
     error_message = str(err.value)
 
-    assert "This is a bug with pydock itself" in error_message
+    assert "This is a bug with dockertown itself" in error_message
 
     # we get the path of the json file with the dump of the response.
     for word in error_message.split():

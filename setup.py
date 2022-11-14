@@ -10,7 +10,7 @@ def get_long_description() -> str:
 
 
 setup(
-    name="pydock",
+    name="dockertown",
     version="0.0.8",
     description="A decent Python wrapper for Docker CLI",
     long_description=get_long_description(),
@@ -22,11 +22,11 @@ setup(
     license="MIT",
     python_requires=">=3.7, <4",
     entry_points={
-        "console_scripts": ["pydock=pydock.command_line_entrypoint:main"],
+        "console_scripts": ["dockertown=dockertown.command_line_entrypoint:main"],
     },
     project_urls={
-        "Documentation": "https://duckietown.github.io/pydock/",
-        "Source Code": "https://github.com/duckietown/pydock",
-        "Bug Tracker": "https://github.com/duckietown/pydock/issues",
+        "Documentation": "https://duckietown.github.io/dockertown/",
+        "Source Code": "https://github.com/duckietown/dockertown",
+        "Bug Tracker": "https://github.com/duckietown/dockertown/issues",
     },
 )

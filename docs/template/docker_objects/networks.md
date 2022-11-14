@@ -2,7 +2,7 @@
 
 Don't use the constructor directly. Instead use 
 ```python
-from pydock import docker
+from dockertown import docker
 
 my_network = docker.network.create("some-network")
 
@@ -11,7 +11,7 @@ my_network = docker.container.inspect("some-network")
 For type hints, use this
 
 ```python
-from pydock import Network, docker
+from dockertown import Network, docker
 
 def ping_hostname_in_network(my_network: Network):
     docker.run("busybox", ["ping", "-c", "10", "my_hostname"], networks=[my_network])
@@ -29,7 +29,7 @@ An example is worth many lines of descriptions.
 
 
 ```
-In [1]: from pydock import docker
+In [1]: from dockertown import docker
 
 In [2]: network = docker.network.create("my-network")
 

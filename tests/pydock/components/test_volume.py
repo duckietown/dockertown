@@ -3,10 +3,10 @@ from pathlib import Path
 
 import pytest
 
-from pydock import docker
-from pydock.components.volume.models import VolumeInspectResult
-from pydock.exceptions import NoSuchVolume
-from pydock.test_utils import get_all_jsons
+from dockertown import docker
+from dockertown.components.volume.models import VolumeInspectResult
+from dockertown.exceptions import NoSuchVolume
+from dockertown.test_utils import get_all_jsons
 
 
 @pytest.mark.parametrize("json_file", get_all_jsons("volumes"))

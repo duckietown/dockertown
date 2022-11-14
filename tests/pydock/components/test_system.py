@@ -6,10 +6,10 @@ from time import sleep
 
 import pytest
 
-from pydock import docker
-from pydock.components.system.models import DockerEvent, SystemInfo
-from pydock.exceptions import DockerException
-from pydock.test_utils import get_all_jsons, random_name
+from dockertown import docker
+from dockertown.components.system.models import DockerEvent, SystemInfo
+from dockertown.exceptions import DockerException
+from dockertown.test_utils import get_all_jsons, random_name
 
 
 def test_disk_free():

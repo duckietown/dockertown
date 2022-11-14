@@ -1,4 +1,4 @@
-from pydock import docker
+from dockertown import docker
 
 
 def test_imagetools_inspect_multiarch():

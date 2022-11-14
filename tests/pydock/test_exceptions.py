@@ -1,7 +1,7 @@
 import pytest
 
-from pydock import docker
-from pydock.exceptions import DockerException
+from dockertown import docker
+from dockertown.exceptions import DockerException
 
 
 def test_exception_attributes():

@@ -1,13 +1,13 @@
-# Running pydock inside a container
+# Running dockertown inside a container
 
 *To follow this example, you just need Docker installed, and nothing else!*
 
 ### The use case
 
 Sometimes you don't want to install Python on your system, but you still
-would like to use pydock to handle most of the Docker logic.
+would like to use dockertown to handle most of the Docker logic.
 
-You can then run pydock inside a Docker container. For simplicity,
+You can then run dockertown inside a Docker container. For simplicity,
 we let the container access the Docker daemon of the host.
 
 Let's give you the code example, and we'll explain afterwards where is the magic.
@@ -15,11 +15,11 @@ Let's give you the code example, and we'll explain afterwards where is the magic
 
 ### Example
 
-We want to run this small Python script. It uses pydock. We'll call it `main.py`
+We want to run this small Python script. It uses dockertown. We'll call it `main.py`
 
 ```python
 # main.py
-from pydock import docker
+from dockertown import docker
 
 print("We are going to run the hello world docker container")
 
@@ -38,8 +38,8 @@ Next to this `main.py`, make a `Dockerfile`.
 # Dockerfile
 FROM python:3.9
 
-RUN pip install pydock
-RUN pydock download-cli
+RUN pip install dockertown
+RUN dockertown download-cli
 
 # install docker buildx, this step is optional
 RUN mkdir -p ~/.docker/cli-plugins/
@@ -58,8 +58,8 @@ CMD python /main.py
 We're all set! Let's run this Python script, without having Python installed on the system!
 
 ```bash
-docker build -t image-with-pydock .
-docker run -v /var/run/docker.sock:/var/run/docker.sock image-with-pydock
+docker build -t image-with-dockertown .
+docker run -v /var/run/docker.sock:/var/run/docker.sock image-with-dockertown
 ```
 
 You should see this output:
@@ -99,6 +99,6 @@ The main magic here is the sharing of the docker socket between the host and the
 This is done with the `-v /var/run/docker.sock:/var/run/docker.sock`.
 
 With this option, the container can have access to the docker API. But it still needs the binary client in Go.
-Download it in the dockerfile with `pydock download-cli`. You can then optionally install buildx and compose.
+Download it in the dockerfile with `dockertown download-cli`. You can then optionally install buildx and compose.
 
 Then you're good to go! Simple as that.

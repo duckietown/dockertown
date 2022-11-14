@@ -2,7 +2,7 @@
 
 Don't use the constructor directly. Instead use 
 ```python
-from pydock import docker
+from dockertown import docker
 
 my_docker_image = docker.image.inspect("my-image-name")
 
@@ -13,7 +13,7 @@ my_docker_image = docker.pull("my-image-name")
 For type hints, use this
 
 ```python
-from pydock import docker, Image
+from dockertown import docker, Image
 
 def print_dodo(image: Image):
     print(docker.run(image, ["echo", "dodo"]))
@@ -32,7 +32,7 @@ and click on "200 No error".
 An example is worth many lines of descriptions.
 
 ```
-In [1]: from pydock import docker
+In [1]: from dockertown import docker
 
 In [2]: image = docker.pull("ubuntu")
 20.04: Pulling from library/ubuntu
