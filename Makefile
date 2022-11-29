@@ -1,7 +1,7 @@
 tag=dockertown
 
 regular_packages=dockertown
-test_packages=pydock_tests
+test_packages=dockertown_tests
 cover_packages=$(test_packages),$(regular_packages)
 
 CIRCLE_NODE_INDEX ?= 0

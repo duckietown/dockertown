@@ -1,8 +1,8 @@
 
 
-site_name: Pydock
+site_name: Dockertown
 docs_dir: generated_sources
-site_description: 'Pydock docs'
+site_description: 'Dockertown docs'
 
 nav:
   - Docker client: docker_client.md
@@ -41,5 +41,5 @@ nav:
   - User guide:
       - docker.run() guide: user_guide/docker_run.md
       - Swarm generic resources: user_guide/generic_resources.md
-      - Running dockertown inside a container: user_guide/running_pydock_inside_a_container.md
+      - Running dockertown inside a container: user_guide/running_dockertown_inside_a_container.md
       - dealing with exceptions: user_guide/exceptions.md

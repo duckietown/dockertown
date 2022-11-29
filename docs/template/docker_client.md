@@ -60,8 +60,8 @@ They're actually aliases
 
 # About multithreading and multiprocessing
 
-Behind the scenes, Pydock calls the Docker command line interface with
-subprocess. The Pydock client does not store any intermediate state so it's safe 
+Behind the scenes, Dockertown calls the Docker command line interface with
+subprocess. The Dockertown client does not store any intermediate state so it's safe 
 to use with multithreading. 
 
 The Docker objects store some intermediate states (the attributes 
@@ -87,12 +87,12 @@ Thread 1: docker.logs(my_container)  # will fail because the container was remov
 ```
 
 In the end, unless you use this type of logic in your code, 
-Pydock is safe to use with multithreading and multiprocessing.
+Dockertown is safe to use with multithreading and multiprocessing.
 
 
 # The Docker CLI
 
-Pydock needs the Docker CLI to work (unlike docker-py).
+Dockertown needs the Docker CLI to work (unlike docker-py).
 Most of the time, users already have the CLI installed on their machines. It's possible to 
 verify that the CLI is there by doing `docker --help` in the command line.
 
@@ -116,6 +116,6 @@ dockertown download-cli
 
 # Handling an unavailable client
 
-Trying to use Pydock when it cannot find or download a Docker client binary
+Trying to use Dockertown when it cannot find or download a Docker client binary
 will trigger a `dockertown.ClientNotFoundError`. You can use a try-except around 
-a first `docker.ps()` call to handle the case when Pydock won't work.
+a first `docker.ps()` call to handle the case when Dockertown won't work.

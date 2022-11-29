@@ -1,6 +1,6 @@
-# Contributing to Pydock
+# Contributing to Dockertown
 
-You want to make Pydock better? Great! Help is always welcomed!
+You want to make Dockertown better? Great! Help is always welcomed!
 
 In this document, we'll try to explain how this package works internally and how you can 
 contribute to it.

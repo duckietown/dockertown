@@ -46,7 +46,7 @@ in the `DockerClient` [documentation](https://duckietown.github.io/dockertown/do
 
 #### About `docker.compose.images()`.
 
-The Docker command line has a `docker compose images` command. Pydock doesn't have
+The Docker command line has a `docker compose images` command. Dockertown doesn't have
 an equivalent because it's trivial to do so with existing functions.
 
 ```

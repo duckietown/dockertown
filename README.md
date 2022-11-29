@@ -1,4 +1,4 @@
-# PyDock
+# Dockertown
 
 ```text
 NOTE: this project is based on the python-on-whales project, you can find it at https://github.com/gabrieldemarmiesse/python-on-whales.
@@ -198,7 +198,7 @@ attributes are updated in real-time!
 context, the Docker object is removed automatically, even if an exception occurs.
 * A fully typed API (Mypy and IDE-friendly) compatible with `pathlib` and `os.path`
 * All Docker objects and the Docker client are safe to use with multithreading and multiprocessing.
-* Display the commands called and the environment variables used by setting the environment variable `PYDOCK_DEBUG=1`.
+* Display the commands called and the environment variables used by setting the environment variable `DOCKERTOWN_DEBUG=1`.
 
 ## Why another project? Why not build on Docker-py?
 
@@ -208,12 +208,12 @@ could not be the same.
 
 Two major differences do not permit that:
 
-1) The API is quite different. The aim of Pydock is to provide a 1-to-1 
+1) The API is quite different. The aim of Dockertown is to provide a 1-to-1 
 mapping between the Docker command line and Python, so that users don't even have 
 to open the docs to do write code.
 
 2) While [Docker-py](https://docker-py.readthedocs.io/en/stable/) is a complete re-implementation of the Docker client binary 
-(written in Go), Pydock sits on top of the Docker client binary, which makes 
+(written in Go), Dockertown sits on top of the Docker client binary, which makes 
 implementing new features much easier and safer. For example, it's 
 [unlikely that docker-py supports Buildx/buildkit](https://github.com/docker/docker-py/issues/2230#issuecomment-454344497)
 anytime soon because rewriting a large Go codebase in Python is hard work.
@@ -222,12 +222,12 @@ anytime soon because rewriting a large Go codebase in Python is hard work.
 ![](./img/docker_clients.png)
 
 
-## Should I use Docker-py or Pydock?
+## Should I use Docker-py or Dockertown?
 
 Well, it's written in each project's description!
 
 * Docker-py: A Python library for the Docker Engine API
-* Pydock: An awesome Python wrapper for an awesome Docker CLI
+* Dockertown: An awesome Python wrapper for an awesome Docker CLI
 
 
 If you need to talk to the Docker engine directly, you need to do low level operations,
@@ -237,9 +237,9 @@ If you don't want to depend on the Docker CLI binary (~50MB), use docker-py.
 
 
 If you wanted to call the docker command line from Python, 
-do high level operations, use Pydock.
+do high level operations, use Dockertown.
 For example if you want to write your CI logic in Python rather than in bash (a very good choice 😉).
-Some commands are only available in Pydock 
+Some commands are only available in Dockertown 
 too: `docker.buildx.build(...)`, `docker.stack.deploy(...)`...
 
 Use the right tool for the right job 🙂
@@ -270,7 +270,7 @@ Take those numbers with a grain of salt. The functions don't all need the same a
 
 ## Alternatives to Docker: Podman, nerdctl...
 
-Support for Docker-compatible clients like [Podman](https://podman.io/) and [Nerdctl](https://github.com/containerd/nerdctl) was introduced in Pydock version 0.44.0.
+Support for Docker-compatible clients like [Podman](https://podman.io/) and [Nerdctl](https://github.com/containerd/nerdctl) was introduced in Dockertown version 0.44.0.
 
 You can use an arbitrary binary to execute Docker commands by using the argument `client_call` of `dockertown.DockerCLient`.
 Here is an example:

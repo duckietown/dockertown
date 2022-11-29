@@ -2,12 +2,12 @@
 
 ## Notes about the transition between the legacy builder and buildx
 
-Users are encouraged to use buildx in Pydock through the
+Users are encouraged to use buildx in Dockertown through the
 [`docker.build()`](buildx.md#build) function.
 
 Buildx is the next gen Docker builder and a transition is underway to make
-the `docker build` shell command use buildx. Pydock has had an opinionated
-answer on the matter as `docker.build()` will always use buildx. This is because Pydock was created 
+the `docker build` shell command use buildx. Dockertown has had an opinionated
+answer on the matter as `docker.build()` will always use buildx. This is because Dockertown was created 
 during the transition and doesn't have an existing user codebase to support.
 
 The legacy builder is still available by calling [`docker.legacy_build()`](image.md#legacy_build), but note that
@@ -18,6 +18,6 @@ The legacy builder is still available by calling [`docker.legacy_build()`](image
 
 Some resources on the matter:
 
-* [Discussion about supporting the legacy builder in Pydock](https://github.com/duckietown/dockertown/issues/345)
+* [Discussion about supporting the legacy builder in Dockertown](https://github.com/duckietown/dockertown/issues/345)
 * [Proposal: make BuildKit the default builder on Linux](https://github.com/moby/moby/issues/40379)
 * [Deprecated Engine Features: Legacy builder for Linux images](https://github.com/docker/cli/blob/master/docs/deprecated.md#legacy-builder-for-linux-images)
