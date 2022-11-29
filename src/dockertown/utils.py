@@ -15,10 +15,10 @@ from .exceptions import (
     DockerException,
     NoSuchContainer,
     NoSuchImage,
+    NoSuchManifest,
     NoSuchService,
     NoSuchVolume,
     NotASwarmManager,
-    NoSuchManifest,
 )
 
 PROJECT_ROOT = Path(__file__).parents[2]
@@ -125,7 +125,7 @@ def run(
         stderr_dest = subprocess.PIPE
     else:
         stderr_dest = None
-    if os.environ.get("PYDOCK_DEBUG", "0") == "1":
+    if os.environ.get("DOCKERTOWN_DEBUG", "0") == "1":
         print("------------------------------")
         print("command: " + " ".join(args))
         print(f"Env: {subprocess_env}")
@@ -251,7 +251,7 @@ def stream_stdout_and_stderr(
         subprocess_env.update(env)
     full_cmd = list(map(str, full_cmd))
 
-    if os.environ.get("PYDOCK_DEBUG", "0") == "1":
+    if os.environ.get("DOCKERTOWN_DEBUG", "0") == "1":
         print("------------------------------")
         print("command: " + " ".join(full_cmd))
         print(f"Env: {subprocess_env}")

@@ -10,7 +10,10 @@ import pytest
 import dockertown
 from dockertown import Image, docker
 from dockertown.components.container.cli_wrapper import ContainerStats
-from dockertown.components.container.models import ContainerInspectResult, ContainerState
+from dockertown.components.container.models import (
+    ContainerInspectResult,
+    ContainerState,
+)
 from dockertown.exceptions import DockerException, NoSuchContainer
 from dockertown.test_utils import get_all_jsons, random_name
 

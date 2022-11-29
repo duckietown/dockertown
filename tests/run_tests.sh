@@ -1,4 +1,4 @@
-set -e
+set -ex
 
 # constants
 SANDBOX_NAME=dockertown-tests
@@ -13,7 +13,7 @@ docker run \
     --tmpfs /tmp \
     --tmpfs /run \
     --tmpfs /run/lock \
-    -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+    --cgroupns=private \
     -v $(pwd):/workdir:ro \
     --workdir /workdir \
     -e DOCKER_CLI_EXPERIMENTAL=enabled \
@@ -24,7 +24,7 @@ docker run \
 while ! ${SANDBOX_RUN} docker ps
 do
     echo waiting for sandbox...
-    sleep 5
+    sleep 2
 done
 
 # - build an image containing the library inside the sandbox

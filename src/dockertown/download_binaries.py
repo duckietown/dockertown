@@ -52,7 +52,7 @@ def download_docker_cli():
     warnings.warn(
         f"The docker client binary file {DOCKER_VERSION} was downloaded and put "
         f"in `{docker_binary_path.absolute()}`. \n"
-        f"You can feel free to remove it if you wish, Pydock will download "
+        f"You can feel free to remove it if you wish, Dockertown will download "
         f"it again if needed."
     )
 

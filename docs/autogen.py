@@ -35,7 +35,9 @@ pages = {
     "sub-commands/network.md": get_methods(
         "dockertown.components.network.cli_wrapper.NetworkCLI"
     ),
-    "sub-commands/node.md": get_methods("dockertown.components.node.cli_wrapper.NodeCLI"),
+    "sub-commands/node.md": get_methods(
+        "dockertown.components.node.cli_wrapper.NodeCLI"
+    ),
     "sub-commands/plugin.md": get_methods(
         "dockertown.components.plugin.cli_wrapper.PluginCLI"
     ),
@@ -54,7 +56,9 @@ pages = {
     "sub-commands/system.md": get_methods(
         "dockertown.components.system.cli_wrapper.SystemCLI"
     ),
-    "sub-commands/task.md": get_methods("dockertown.components.task.cli_wrapper.TaskCLI"),
+    "sub-commands/task.md": get_methods(
+        "dockertown.components.task.cli_wrapper.TaskCLI"
+    ),
     "sub-commands/trust.md": get_methods(
         "dockertown.components.trust.cli_wrapper.TrustCLI"
     ),

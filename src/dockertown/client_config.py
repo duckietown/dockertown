@@ -78,7 +78,7 @@ class ClientConfig:
             if not get_docker_binary_path_in_cache().exists():
                 warnings.warn(
                     "The docker client binary file was not found on your system. \n"
-                    "Pydock will try to download it for you. \n"
+                    "Dockertown will try to download it for you. \n"
                     "Don't worry, it "
                     "won't be in the PATH and won't have anything to do with "
                     "the package manager of your system. \n"

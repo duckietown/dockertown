@@ -357,7 +357,8 @@ def test_project_directory_env_files(tmp_path: Path):
     project_env_file_two.write_text("TEST=two\n")
     docker = DockerClient(
         compose_files=[
-            PROJECT_ROOT / "tests/dockertown/components/dummy_compose_project_directory.yml"
+            PROJECT_ROOT
+            / "tests/dockertown/components/dummy_compose_project_directory.yml"
         ],
         compose_project_directory=tmp_path,
         compose_compatibility=True,

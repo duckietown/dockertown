@@ -1,6 +1,6 @@
 import base64
 import json
-from typing import List, Optional, Dict
+from typing import Dict, List, Optional
 
 from .client_config import ClientConfig, DockerCLICaller
 from .components.buildx.cli_wrapper import BuildxCLI
@@ -68,7 +68,7 @@ class DockerClient(DockerCLICaller):
             This option is a list because you can provide a list of command line arguments to be placed after `"docker"`.
             For exemple `host="ssh://my_user@host.com"` is equivalent
             to `client_call=["docker", "--host=ssh://my_user@host.com"]`.
-            This will allow you to use some exotic options that are not explicitly supported by Pydock.
+            This will allow you to use some exotic options that are not explicitly supported by `dockertown`.
             Let's say you want to use estargz to run a container immediately, without waiting for the "pull"
             to finish (yes it's possible!), you can
             do `nerdctl = DockerClient(client_call=["nerdctl", "--snapshotter=stargz"])`

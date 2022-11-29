@@ -1,13 +1,12 @@
-from typing import Optional, List
+from typing import List, Optional
 
 from ....client_config import DockerCLICaller
-from ....utils import run
 from ....exceptions import DockerException
+from ....utils import run
 from .models import Manifest
 
 
 class ImagetoolsCLI(DockerCLICaller):
-
     def inspect(self, name: str) -> Optional[Manifest]:
         """Returns the manifest of a Docker image in a registry without pulling it"""
         full_cmd = self.docker_cmd + ["buildx", "imagetools", "inspect", "--raw", name]
@@ -20,15 +19,16 @@ class ImagetoolsCLI(DockerCLICaller):
             raise e
         return Manifest.parse_raw(result)
 
-    def create(self,
-               tag: str,
-               source: List[str],
-               append: bool = False,
-               dry_run: bool = False,
-               builder: Optional[str] = None,
-               file: Optional[str] = None,
-               progress: Optional[str] = None
-               ) -> None:
+    def create(
+        self,
+        tag: str,
+        source: List[str],
+        append: bool = False,
+        dry_run: bool = False,
+        builder: Optional[str] = None,
+        file: Optional[str] = None,
+        progress: Optional[str] = None,
+    ) -> None:
         """
         Creates the manifest of a Docker image in a registry
 

@@ -1,22 +1,21 @@
 from typing import Optional
 
-from ..buildx.imagetools.models import Manifest
 from ...client_config import DockerCLICaller
-from ...exceptions import DockerException
 from ...utils import run
+from ..buildx.imagetools.models import Manifest
 
 
 class ManifestCLI(DockerCLICaller):
-
-    def annotate(self,
-                 tag: str,
-                 image: str,
-                 arch: Optional[str] = None,
-                 os: Optional[str] = None,
-                 os_features: Optional[str] = None,
-                 os_version: Optional[str] = None,
-                 variant: Optional[str] = None,
-                 ) -> None:
+    def annotate(
+        self,
+        tag: str,
+        image: str,
+        arch: Optional[str] = None,
+        os: Optional[str] = None,
+        os_features: Optional[str] = None,
+        os_version: Optional[str] = None,
+        variant: Optional[str] = None,
+    ) -> None:
         """
         Add additional information to a local image manifest
 
@@ -39,12 +38,13 @@ class ManifestCLI(DockerCLICaller):
         # execute command
         run(full_cmd)
 
-    def create(self,
-               tag: str,
-               images: str,
-               amend: bool = False,
-               insecure: bool = False,
-               ) -> None:
+    def create(
+        self,
+        tag: str,
+        images: str,
+        amend: bool = False,
+        insecure: bool = False,
+    ) -> None:
         """
         Creates the manifest of a Docker image in a registry
 
@@ -75,11 +75,12 @@ class ManifestCLI(DockerCLICaller):
         result = run(full_cmd)
         return Manifest.parse_raw(result)
 
-    def push(self,
-             tag: str,
-             purge: bool = False,
-             insecure: bool = False,
-             ) -> None:
+    def push(
+        self,
+        tag: str,
+        purge: bool = False,
+        insecure: bool = False,
+    ) -> None:
         """
         Pushes the manifest to a registry
 

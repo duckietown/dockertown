@@ -540,11 +540,7 @@ class BuildxCLI(DockerCLICaller):
         full_cmd = self.docker_cmd + ["buildx", "version"]
         out = run(full_cmd)
         source, version, sha = out.strip().split(" ")
-        return {
-            "source": source,
-            "version": version.lstrip("v"),
-            "sha": sha
-        }
+        return {"source": source, "version": version.lstrip("v"), "sha": sha}
 
     def is_installed(self) -> bool:
         """Returns `True` if docker buildx is installed and working.
