@@ -18,7 +18,7 @@ from .exceptions import (
     NoSuchManifest,
     NoSuchService,
     NoSuchVolume,
-    NotASwarmManager,
+    NotASwarmManager, TemporaryFailureInNameResolution,
 )
 
 PROJECT_ROOT = Path(__file__).parents[2]
@@ -82,6 +82,7 @@ def run(
     return_stderr: Literal[True] = False,
     env: Dict[str, str] = {},
     tty: bool = False,
+    retry: int = 3
 ) -> Tuple[str, str]:
     ...
 
@@ -95,6 +96,7 @@ def run(
     return_stderr: Literal[False] = False,
     env: Dict[str, str] = {},
     tty: bool = False,
+    retry: int = 3
 ) -> str:
     ...
 
@@ -107,6 +109,7 @@ def run(
     return_stderr: bool = False,
     env: Dict[str, str] = {},
     tty: bool = False,
+    retry: int = 3
 ) -> Union[str, Tuple[str, str]]:
     args = [str(x) for x in args]
     subprocess_env = dict(os.environ)
@@ -130,6 +133,7 @@ def run(
         print("command: " + " ".join(args))
         print(f"Env: {subprocess_env}")
         print("------------------------------")
+
     completed_process = subprocess.run(
         args, input=input, stdout=stdout_dest, stderr=stderr_dest, env=subprocess_env
     )
@@ -181,6 +185,26 @@ def run(
                     completed_process.stdout,
                     completed_process.stderr,
                 )
+            if "Temporary failure in name resolution" in completed_process.stderr.decode().lower():
+                if retry > 0:
+                    # noinspection PyTypeChecker
+                    return run(
+                        args=args,
+                        capture_stdout=capture_stdout,
+                        capture_stderr=capture_stderr,
+                        input=input,
+                        return_stderr=return_stderr,
+                        env=env,
+                        tty=tty,
+                        retry=retry-1
+                    )
+                else:
+                    raise TemporaryFailureInNameResolution(
+                        args,
+                        completed_process.returncode,
+                        completed_process.stdout,
+                        completed_process.stderr,
+                    )
 
         raise DockerException(
             args,

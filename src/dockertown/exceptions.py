@@ -64,3 +64,7 @@ class NoSuchVolume(DockerException):
 
 class NoSuchManifest(DockerException):
     pass
+
+
+class TemporaryFailureInNameResolution(DockerException):
+    pass
