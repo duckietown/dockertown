@@ -20,72 +20,15 @@ xunitmp=--with-xunitmp --xunitmp-file=$(xunit_output)
 extra=--rednose --immediate
 
 
-
-all:
-	@echo "You can try:"
-	@echo
-	@echo "  make build run"
-	@echo "  make docs "
-	@echo "  make test coverage-combine coverage-report"
-	@echo "  "
-	@echo "  make -C notebooks clean all"
-
-
+# Code formatting
 
 black:
-	black -l 110 --target-version py37 src
+	black --target-version py37 src
 
-clean:
-	coverage erase
-	rm -rf $(out) $(coverage_dir) $(tr)
+isort:
+	isort src
 
-test: clean
-	mkdir -p  $(tr)
-	DISABLE_CONTRACTS=1 nosetests $(extra) $(coverage)  src  -v --nologcapture $(xunitmp)
-
-
-test-parallel: clean
-	mkdir -p  $(tr)
-	DISABLE_CONTRACTS=1 nosetests $(extra) $(coverage) src  -v --nologcapture $(parallel)
-
-
-test-parallel-circle:
-	DISABLE_CONTRACTS=1 \
-	NODE_TOTAL=$(CIRCLE_NODE_TOTAL) \
-	NODE_INDEX=$(CIRCLE_NODE_INDEX) \
-	nosetests $(coverage) $(xunitmp) src  -v  $(parallel)
-
-
-coverage-combine:
-	coverage combine
-
-
-
-build:
-	docker build -t $(tag) .
-
-build-no-cache:
-	docker build --no-cache -t $(tag) .
-
-
-test-docker: build
-	docker run -it $(tag) make test
-
-
-run:
-	mkdir -p out-docker
-	docker run -it -v $(PWD)/out-docker:/out $(tag) dt-pc-demo
-#
-run-with-mounted-src:
-	mkdir -p out-docker
-	docker run -it -v $(PWD)/src:/dockertown/src:ro -v $(PWD)/out-docker:/out $(tag) dt-pc-demo
-
-
-coverage-report:
-	coverage html  -d $(coverage_dir)
-
-docs:
-	sphinx-build src $(out)/docs
+format: black isort
 
 
 # Release code
@@ -104,3 +47,50 @@ upload:
 	rm -rf src/*.egg-info
 	python3 setup.py sdist
 	twine upload --skip-existing --verbose dist/*
+
+
+
+
+
+
+
+# OLD stuff
+
+_clean:
+	coverage erase
+	rm -rf $(out) $(coverage_dir) $(tr)
+
+_test:
+	./tests/run_tests.sh
+
+
+_coverage-combine:
+	coverage combine
+
+
+_build:
+	docker build -t $(tag) .
+
+_build-no-cache:
+	docker build --no-cache -t $(tag) .
+
+
+_test-docker: build
+	docker run -it $(tag) make test
+
+
+_run:
+	mkdir -p out-docker
+	docker run -it -v $(PWD)/out-docker:/out $(tag) dt-pc-demo
+
+
+_run-with-mounted-src:
+	mkdir -p out-docker
+	docker run -it -v $(PWD)/src:/dockertown/src:ro -v $(PWD)/out-docker:/out $(tag) dt-pc-demo
+
+
+_coverage-report:
+	coverage html  -d $(coverage_dir)
+
+_docs:
+	sphinx-build src $(out)/docs
