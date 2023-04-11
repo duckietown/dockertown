@@ -15,7 +15,7 @@ def test_load_json(json_file):
 def test_create_context():
     testname = "testpow"
     host = "ssh://test@test.domain"
-    description = "Python on whales testing context"
+    description = "Dockertown testing context"
 
     all_contexts_before = set(docker.context.list())
     with docker.context.create(

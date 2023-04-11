@@ -1,31 +1,89 @@
-from typing import Optional
+from typing import Any, Dict, List, Optional, Union
 
-from ...client_config import DockerCLICaller
-from ...utils import run
-from ..buildx.imagetools.models import Manifest
+from ...client_config import ClientConfig, DockerCLICaller, ReloadableObjectFromJson
+from ...utils import run, to_list
+from ..buildx.imagetools.models import ImageVariantManifest
+from .models import ManifestListInspectResult
+
+
+class ManifestList(ReloadableObjectFromJson):
+    def __init__(
+        self, client_config: ClientConfig, reference: str, is_immutable_id=False
+    ):
+        self.reference = reference
+        super().__init__(client_config, "name", reference, is_immutable_id)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.remove()
+
+    def _fetch_inspect_result_json(self, reference):
+        return f'[{run(self.docker_cmd + ["manifest", "inspect", reference])}]'
+
+    def _parse_json_object(
+        self, json_object: Dict[str, Any]
+    ) -> ManifestListInspectResult:
+        json_object["name"] = self.reference
+        return ManifestListInspectResult.parse_obj(json_object)
+
+    def _get_inspect_result(self) -> ManifestListInspectResult:
+        """Only there to allow tools to know the return type"""
+        return super()._get_inspect_result()
+
+    @property
+    def name(self) -> str:
+        return self._get_inspect_result().name
+
+    @property
+    def schema_version(self) -> str:
+        return self._get_inspect_result().schema_version
+
+    @property
+    def media_type(self) -> str:
+        return self._get_inspect_result().media_type
+
+    @property
+    def manifests(self) -> List[ImageVariantManifest]:
+        return self._get_inspect_result().manifests
+
+    def __repr__(self):
+        return f"dockertown.ManifestList(name='{self.name}')"
+
+    def remove(self) -> None:
+        """Removes this Docker manifest list.
+
+        Rather than removing it manually, you can use a context manager to
+        make sure the manifest list is deleted even if an exception is raised.
+        """
+        ManifestCLI(self.client_config).remove(self)
+
+
+ValidManifestList = Union[ManifestList, str]
 
 
 class ManifestCLI(DockerCLICaller):
     def annotate(
         self,
-        tag: str,
-        image: str,
+        name: str,
+        manifest: str,
         arch: Optional[str] = None,
         os: Optional[str] = None,
-        os_features: Optional[str] = None,
+        os_features: Optional[List[str]] = None,
         os_version: Optional[str] = None,
         variant: Optional[str] = None,
-    ) -> None:
-        """
-        Add additional information to a local image manifest
+    ) -> ManifestList:
+        """Annotates a Docker manifest list.
 
-        :param tag:         Manifest name
-        :param image:      List of images to add to the manifest
-        :param arch:            Set architecture
-        :param os:              Set operating system
-        :param os_features:     Set operating system feature
-        :param os_version:      Set operating system version
-        :param variant:         Set architecture variant
+        # Arguments
+            name: The name of the manifest list
+            manifest: The individual manifest to annotate
+            arch: The manifest's architecture
+            os: The manifest's operating system
+            os_features: The manifest's operating system features
+            os_version: The manifest's operating system version
+            variant: The manifest's architecture variant
         """
         full_cmd = self.docker_cmd + ["manifest", "annotate"]
         full_cmd.add_simple_arg("--arch", arch)
@@ -33,64 +91,61 @@ class ManifestCLI(DockerCLICaller):
         full_cmd.add_simple_arg("--os-features", os_features)
         full_cmd.add_simple_arg("--os-version", os_version)
         full_cmd.add_simple_arg("--variant", variant)
-        full_cmd.append(tag)
-        full_cmd.extend(image)
-        # execute command
+        full_cmd.append(name)
+        full_cmd.append(manifest)
         run(full_cmd)
 
     def create(
         self,
-        tag: str,
-        images: str,
-        amend: bool = False,
+        name: str,
+        manifests: List[str],
+        ammend: bool = False,
         insecure: bool = False,
-    ) -> None:
-        """
-        Creates the manifest of a Docker image in a registry
+    ) -> ManifestList:
+        """Creates a Docker manifest list.
 
-        :param tag:         Manifest name
-        :param images:      List of images to add to the manifest
-        :param amend:       Amend an existing manifest list
-        :param insecure:    Allow communication with an insecure registry
+        # Arguments
+            name: The name of the manifest list
+            manifests: The list of manifests to add to the manifest list
+
+        # Returns
+            A `dockertown.ManifestList`.
         """
         full_cmd = self.docker_cmd + ["manifest", "create"]
-        full_cmd.add_flag("--amend", amend)
-        full_cmd.add_flag("--insecure", insecure)
-        full_cmd.append(tag)
-        full_cmd.extend(images)
-        # execute command
-        run(full_cmd)
-
-    def inspect(self, name: str, insecure: bool = False):
-        """
-        Returns the manifest of a Docker image in a registry without pulling it.
-
-        :param name:        Name of the manifest to inspect
-        :param insecure:    Allow communication with an insecure registry
-        :return:
-        """
-        full_cmd = self.docker_cmd + ["manifest", "inspect"]
+        full_cmd.add_flag("--amend", ammend)
         full_cmd.add_flag("--insecure", insecure)
         full_cmd.append(name)
-        result = run(full_cmd)
-        return Manifest.parse_raw(result)
+        full_cmd += to_list(manifests)
+        return ManifestList(
+            self.client_config, run(full_cmd)[22:], is_immutable_id=True
+        )
 
-    def push(
-        self,
-        tag: str,
-        purge: bool = False,
-        insecure: bool = False,
-    ) -> None:
-        """
-        Pushes the manifest to a registry
+    def inspect(self, x: str) -> ManifestList:
+        """Returns a Docker manifest list object."""
+        return ManifestList(self.client_config, x)
 
-        :param tag:         Manifest name
-        :param purge:       Remove the local manifest list after push
-        :param insecure:    Allow communication with an insecure registry
+    def push(self, x: str, purge: bool = False, quiet: bool = False):
+        """Push a manifest list to a repository.
+
+        # Options
+            purge: Remove the local manifest list after push
         """
+        # this is just to raise a correct exception if the manifest list doesn't exist
+        self.inspect(x)
+
         full_cmd = self.docker_cmd + ["manifest", "push"]
         full_cmd.add_flag("--purge", purge)
-        full_cmd.add_flag("--insecure", insecure)
-        full_cmd.append(tag)
-        # execute command
+        full_cmd.append(x)
+        run(full_cmd, capture_stdout=quiet, capture_stderr=quiet)
+
+    def remove(self, manifest_lists: Union[ValidManifestList, List[ValidManifestList]]):
+        """Removes a Docker manifest list or lists.
+
+        # Arguments
+            manifest_lists: One or more manifest lists.
+        """
+        if manifest_lists == []:
+            return
+        full_cmd = self.docker_cmd + ["manifest", "rm"]
+        full_cmd += to_list(manifest_lists)
         run(full_cmd)

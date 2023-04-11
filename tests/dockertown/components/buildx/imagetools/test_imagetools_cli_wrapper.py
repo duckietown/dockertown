@@ -1,7 +1,7 @@
 from dockertown import docker
 from dockertown.utils import PROJECT_ROOT
 
-bake_test_dir = PROJECT_ROOT / "tests/python_on_whales/components/bake_tests"
+bake_test_dir = PROJECT_ROOT / "tests/dockertown/components/bake_tests"
 bake_file = bake_test_dir / "docker-bake.hcl"
 
 

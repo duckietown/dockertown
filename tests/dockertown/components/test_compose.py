@@ -52,7 +52,7 @@ def test_kill_empty_list_of_services():
 
 
 def test_wait_for_service():
-    docker = python_on_whales.DockerClient(
+    docker = dockertown.DockerClient(
         compose_files=[Path(__file__).parent / "compose-with-healthcheck.yml"]
     )
     # ensure environment is clean
@@ -265,6 +265,7 @@ def test_docker_compose_ps():
 
 
 def test_docker_compose_start():
+    assert docker.compose.ps() == []
     docker.compose.create(["busybox"])
     assert not docker.compose.ps(all=True)[0].state.running
     assert docker.compose.ps() == []
@@ -744,9 +745,8 @@ def test_compose_port():
 def test_compose_ls_project_multiple_statuses():
     d = DockerClient(
         compose_files=[
-            PROJECT_ROOT
-            / "tests/python_on_whales/components/dummy_compose_ends_quickly.yml",
-            PROJECT_ROOT / "tests/python_on_whales/components/dummy_compose.yml",
+            PROJECT_ROOT / "tests/dockertown/components/dummy_compose_ends_quickly.yml",
+            PROJECT_ROOT / "tests/dockertown/components/dummy_compose.yml",
         ],
         compose_compatibility=True,
         compose_project_name="test_compose_ls",

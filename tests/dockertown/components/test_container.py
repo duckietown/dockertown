@@ -664,8 +664,8 @@ def test_run_detached_interactive():
         c.execute(["true"])
 
 
-@patch("python_on_whales.components.container.cli_wrapper.ContainerCLI.inspect")
-@patch("python_on_whales.components.container.cli_wrapper.run")
+@patch("dockertown.components.container.cli_wrapper.ContainerCLI.inspect")
+@patch("dockertown.components.container.cli_wrapper.run")
 def test_attach_default(run_mock: Mock, inspect_mock: Mock) -> None:
     test_container_name = "test_dummy_container"
 
@@ -679,8 +679,8 @@ def test_attach_default(run_mock: Mock, inspect_mock: Mock) -> None:
     )
 
 
-@patch("python_on_whales.components.container.cli_wrapper.ContainerCLI.inspect")
-@patch("python_on_whales.components.container.cli_wrapper.run")
+@patch("dockertown.components.container.cli_wrapper.ContainerCLI.inspect")
+@patch("dockertown.components.container.cli_wrapper.run")
 def test_attach_detach_keys_argument(run_mock: Mock, inspect_mock: Mock) -> None:
     test_container_name = "test_dummy_container"
     test_detach_key = "dummy"
@@ -701,8 +701,8 @@ def test_attach_detach_keys_argument(run_mock: Mock, inspect_mock: Mock) -> None
     )
 
 
-@patch("python_on_whales.components.container.cli_wrapper.ContainerCLI.inspect")
-@patch("python_on_whales.components.container.cli_wrapper.run")
+@patch("dockertown.components.container.cli_wrapper.ContainerCLI.inspect")
+@patch("dockertown.components.container.cli_wrapper.run")
 def test_attach_no_stdin_argument(run_mock: Mock, inspect_mock: Mock) -> None:
     test_container_name = "test_dummy_container"
 
@@ -716,8 +716,8 @@ def test_attach_no_stdin_argument(run_mock: Mock, inspect_mock: Mock) -> None:
     )
 
 
-@patch("python_on_whales.components.container.cli_wrapper.ContainerCLI.inspect")
-@patch("python_on_whales.components.container.cli_wrapper.run")
+@patch("dockertown.components.container.cli_wrapper.ContainerCLI.inspect")
+@patch("dockertown.components.container.cli_wrapper.run")
 def test_attach_sig_proxy_argument(run_mock: Mock, inspect_mock: Mock) -> None:
     test_container_name = "test_dummy_container"
 
@@ -729,9 +729,9 @@ def test_attach_sig_proxy_argument(run_mock: Mock, inspect_mock: Mock) -> None:
     )
 
 
-@patch("python_on_whales.components.container.cli_wrapper.run")
-@patch("python_on_whales.components.container.cli_wrapper.Container")
-@patch("python_on_whales.components.image.cli_wrapper.ImageCLI")
+@patch("dockertown.components.container.cli_wrapper.run")
+@patch("dockertown.components.container.cli_wrapper.Container")
+@patch("dockertown.components.image.cli_wrapper.ImageCLI")
 def test_container_create_default_pull(
     image_mock: Mock, _: Mock, run_mock: Mock
 ) -> None:
@@ -749,9 +749,9 @@ def test_container_create_default_pull(
     )
 
 
-@patch("python_on_whales.components.container.cli_wrapper.run")
-@patch("python_on_whales.components.container.cli_wrapper.Container")
-@patch("python_on_whales.components.image.cli_wrapper.ImageCLI")
+@patch("dockertown.components.container.cli_wrapper.run")
+@patch("dockertown.components.container.cli_wrapper.Container")
+@patch("dockertown.components.image.cli_wrapper.ImageCLI")
 def test_container_create_missing_pull(
     image_mock: Mock, _: Mock, run_mock: Mock
 ) -> None:
@@ -769,9 +769,9 @@ def test_container_create_missing_pull(
     )
 
 
-@patch("python_on_whales.components.container.cli_wrapper.run")
-@patch("python_on_whales.components.container.cli_wrapper.Container")
-@patch("python_on_whales.components.image.cli_wrapper.ImageCLI")
+@patch("dockertown.components.container.cli_wrapper.run")
+@patch("dockertown.components.container.cli_wrapper.Container")
+@patch("dockertown.components.image.cli_wrapper.ImageCLI")
 def test_container_create_always_pull(
     image_mock: Mock, _: Mock, run_mock: Mock
 ) -> None:
@@ -789,9 +789,9 @@ def test_container_create_always_pull(
     )
 
 
-@patch("python_on_whales.components.container.cli_wrapper.run")
-@patch("python_on_whales.components.container.cli_wrapper.Container")
-@patch("python_on_whales.components.image.cli_wrapper.ImageCLI")
+@patch("dockertown.components.container.cli_wrapper.run")
+@patch("dockertown.components.container.cli_wrapper.Container")
+@patch("dockertown.components.image.cli_wrapper.ImageCLI")
 def test_container_create_never_pull(image_mock: Mock, _: Mock, run_mock: Mock) -> None:
     image_cli_mock = Mock()
     image_mock.return_value = image_cli_mock
@@ -807,9 +807,9 @@ def test_container_create_never_pull(image_mock: Mock, _: Mock, run_mock: Mock) 
     )
 
 
-@patch("python_on_whales.components.container.cli_wrapper.run")
-@patch("python_on_whales.components.container.cli_wrapper.Container")
-@patch("python_on_whales.components.image.cli_wrapper.ImageCLI")
+@patch("dockertown.components.container.cli_wrapper.run")
+@patch("dockertown.components.container.cli_wrapper.Container")
+@patch("dockertown.components.image.cli_wrapper.ImageCLI")
 def test_container_run_default_pull(image_mock: Mock, _: Mock, run_mock: Mock) -> None:
     image_cli_mock = Mock()
     image_mock.return_value = image_cli_mock
@@ -827,9 +827,9 @@ def test_container_run_default_pull(image_mock: Mock, _: Mock, run_mock: Mock) -
     )
 
 
-@patch("python_on_whales.components.container.cli_wrapper.run")
-@patch("python_on_whales.components.container.cli_wrapper.Container")
-@patch("python_on_whales.components.image.cli_wrapper.ImageCLI")
+@patch("dockertown.components.container.cli_wrapper.run")
+@patch("dockertown.components.container.cli_wrapper.Container")
+@patch("dockertown.components.image.cli_wrapper.ImageCLI")
 def test_container_run_missing_pull(image_mock: Mock, _: Mock, run_mock: Mock) -> None:
     image_cli_mock = Mock()
     image_mock.return_value = image_cli_mock
@@ -847,9 +847,9 @@ def test_container_run_missing_pull(image_mock: Mock, _: Mock, run_mock: Mock) -
     )
 
 
-@patch("python_on_whales.components.container.cli_wrapper.run")
-@patch("python_on_whales.components.container.cli_wrapper.Container")
-@patch("python_on_whales.components.image.cli_wrapper.ImageCLI")
+@patch("dockertown.components.container.cli_wrapper.run")
+@patch("dockertown.components.container.cli_wrapper.Container")
+@patch("dockertown.components.image.cli_wrapper.ImageCLI")
 def test_container_run_always_pull(image_mock: Mock, _: Mock, run_mock: Mock) -> None:
     image_cli_mock = Mock()
     image_mock.return_value = image_cli_mock
@@ -867,9 +867,9 @@ def test_container_run_always_pull(image_mock: Mock, _: Mock, run_mock: Mock) ->
     )
 
 
-@patch("python_on_whales.components.container.cli_wrapper.run")
-@patch("python_on_whales.components.container.cli_wrapper.Container")
-@patch("python_on_whales.components.image.cli_wrapper.ImageCLI")
+@patch("dockertown.components.container.cli_wrapper.run")
+@patch("dockertown.components.container.cli_wrapper.Container")
+@patch("dockertown.components.image.cli_wrapper.ImageCLI")
 def test_container_run_never_pull(image_mock: Mock, _: Mock, run_mock: Mock) -> None:
     image_cli_mock = Mock()
     image_mock.return_value = image_cli_mock

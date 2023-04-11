@@ -14,7 +14,7 @@ RUN chmod a+x /docker-compose
 #-----------------------------------------------------------------------------
 FROM python:3.7 as python_dependencies
 
-RUN pip install pydantic requests tqdm
+RUN pip install pydantic requests tqdm flake8 isort black
 
 COPY tests/test-requirements.txt /tmp/
 COPY requirements.txt /tmp/

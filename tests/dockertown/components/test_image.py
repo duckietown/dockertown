@@ -240,7 +240,7 @@ def test_exists():
     assert not docker.image.exists("dudurghurozgiozpfezjigfoeioengizeonig")
 
 
-@patch("python_on_whales.components.image.cli_wrapper.ContainerCLI")
+@patch("dockertown.components.container.cli_wrapper.ContainerCLI")
 def test_copy_from_default_pull(container_mock: Mock) -> None:
     container_cli_mock = MagicMock()
     container_mock.return_value = container_cli_mock
@@ -254,7 +254,7 @@ def test_copy_from_default_pull(container_mock: Mock) -> None:
     container_cli_mock.create.assert_called_with(test_image_name, pull="missing")
 
 
-@patch("python_on_whales.components.image.cli_wrapper.ContainerCLI")
+@patch("dockertown.components.container.cli_wrapper.ContainerCLI")
 def test_copy_from_pull(container_mock: Mock) -> None:
     container_cli_mock = MagicMock()
     container_mock.return_value = container_cli_mock
@@ -272,7 +272,7 @@ def test_copy_from_pull(container_mock: Mock) -> None:
     container_cli_mock.create.assert_called_with(test_image_name, pull=test_pull_flag)
 
 
-@patch("python_on_whales.components.image.cli_wrapper.ContainerCLI")
+@patch("dockertown.components.container.cli_wrapper.ContainerCLI")
 def test_copy_to_default_pull(container_mock: Mock) -> None:
     container_cli_mock = MagicMock()
     container_mock.return_value = container_cli_mock
@@ -286,7 +286,7 @@ def test_copy_to_default_pull(container_mock: Mock) -> None:
     container_cli_mock.create.assert_called_with(test_image_name, pull="missing")
 
 
-@patch("python_on_whales.components.image.cli_wrapper.ContainerCLI")
+@patch("dockertown.components.container.cli_wrapper.ContainerCLI")
 def test_copy_to_pull(container_mock: Mock) -> None:
     container_cli_mock = MagicMock()
     container_mock.return_value = container_cli_mock

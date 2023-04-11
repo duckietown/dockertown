@@ -1,4 +1,5 @@
-from typing import List, Optional
+from pathlib import Path
+from typing import List, Optional, Union
 
 from ....client_config import DockerCLICaller
 from ....exceptions import DockerException
@@ -21,35 +22,52 @@ class ImagetoolsCLI(DockerCLICaller):
 
     def create(
         self,
-        tag: str,
-        source: List[str],
+        sources: List[str] = [],
+        tags: List[str] = [],
         append: bool = False,
+        files: List[Union[str, Path]] = [],
         dry_run: bool = False,
         builder: Optional[str] = None,
-        file: Optional[str] = None,
-        progress: Optional[str] = None,
-    ) -> None:
+    ) -> Optional[Manifest]:
         """
-        Creates the manifest of a Docker image in a registry
+        Create a new manifest list based on source manifests.
+        The source manifests can be manifest lists or single platform distribution manifests and
+        must already exist in the registry where the new manifest is created.
+        If only one source is specified, create performs a carbon copy.
 
-        :param tag: Manifest name
-        :param source: List of images to add to the manifest
-        :param append: Append to existing manifest
-        :param dry_run: Show final image instead of pushing
-        :param builder: Override the configured builder instance
-        :param file: Read source descriptor from file
-        :param progress: Set type of progress output ("auto", "plain", "tty").
+        The CLI docs is [here](https://docs.docker.com/engine/reference/commandline/buildx_imagetools_create/)
+        and it contains a lot more information.
+
+        # Arguments
+            sources: The sources manifest to create, change
+            append: Append to existing manifest
+            dry_run: Show final image instead of pushing
+            files: Read source descriptor from file
+            builder: The builder to use.
         """
+        if not isinstance(sources, list):
+            raise TypeError(
+                "The argument 'sources' of the function docker.buildx.imagetools.create() must be a list of strings."
+            )
+        if not isinstance(tags, list):
+            raise TypeError(
+                "The argument 'tags' of the function docker.buildx.imagetools.create() must be a list of strings."
+            )
+        if not isinstance(files, list):
+            raise TypeError(
+                "The argument 'files' of the function docker.buildx.imagetools.create() must be a list of strings."
+            )
+
         full_cmd = self.docker_cmd + ["buildx", "imagetools", "create"]
-        full_cmd.add_simple_arg("--tag", tag)
+        for tag in tags:
+            full_cmd.add_simple_arg("--tag", tag)
+        for file in files:
+            full_cmd.add_simple_arg("--file", file)
+        full_cmd.add_simple_arg("--builder", builder)
         full_cmd.add_flag("--append", append)
         full_cmd.add_flag("--dry-run", dry_run)
-        if builder:
-            full_cmd.add_simple_arg("--builder", builder)
-        if file:
-            full_cmd.add_simple_arg("--file", file)
-        if progress:
-            full_cmd.add_simple_arg("--progress", progress)
-        full_cmd.extend(source)
-        # execute command
-        run(full_cmd)
+        full_cmd += sources
+
+        result = run(full_cmd)
+        if dry_run:
+            return Manifest.parse_raw(result)

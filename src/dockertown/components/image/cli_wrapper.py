@@ -668,7 +668,9 @@ class ImageCLI(DockerCLICaller):
         destination: ValidPath,
         pull: str = "missing",
     ):
-        with container_cli_wrapper.ContainerCLI(self.client_config).create(image, pull=pull) as tmp_container:
+        with container_cli_wrapper.ContainerCLI(self.client_config).create(
+            image, pull=pull
+        ) as tmp_container:
             tmp_container.copy_from(path_in_image, destination)
 
     def copy_to(

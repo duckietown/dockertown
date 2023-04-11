@@ -382,7 +382,7 @@ class ContainerCLI(DockerCLICaller):
             sig_proxy: Proxy all received signals to the process (default true)
 
         # Raises
-            `python_on_whales.exceptions.NoSuchContainer` if the container does not exists.
+            `dockertown.exceptions.NoSuchContainer` if the container does not exists.
         """
         self.inspect(container)
 

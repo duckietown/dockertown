@@ -23,7 +23,7 @@ extra=--rednose --immediate
 # Code formatting
 
 black:
-	black --target-version py37 src
+	black --target-version py37 src tests
 
 isort:
 	isort src

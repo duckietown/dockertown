@@ -5,20 +5,15 @@ from datetime import timedelta
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Union
 
-from python_on_whales.client_config import DockerCLICaller
-from python_on_whales.components.compose.models import ComposeConfig, ComposeProject
-from python_on_whales.utils import (
-    format_dict_for_cli,
-    parse_ls_status_count,
-    run,
-    stream_stdout_and_stderr,
-    to_list,
-)
 from typing_extensions import Literal
 
-from .models import ComposeConfig
+from dockertown.client_config import DockerCLICaller
+from dockertown.components.compose.models import ComposeProject
+from dockertown.utils import parse_ls_status_count
+
 from ...components.container import cli_wrapper as container_cli_wrapper
 from ...utils import format_dict_for_cli, run, stream_stdout_and_stderr, to_list
+from .models import ComposeConfig
 
 
 class ComposeCLI(DockerCLICaller):
@@ -331,9 +326,9 @@ class ComposeCLI(DockerCLICaller):
         return host, int(port)
 
     def ps(
-            self,
-            services: Optional[List[str]] = None,
-            all: bool = False,
+        self,
+        services: Optional[List[str]] = None,
+        all: bool = False,
     ) -> List[container_cli_wrapper.Container]:
         """Returns the containers that were created by the current project.
 
@@ -364,7 +359,7 @@ class ComposeCLI(DockerCLICaller):
             project_filters: Filter results based on conditions provided.
 
         # Returns
-            A `List[python_on_whales.ComposeProject]`
+            A `List[dockertown.ComposeProject]`
         """
         full_cmd = self.docker_compose_cmd + ["ls", "--format", "json"]
         full_cmd.add_flag("--all", all)
