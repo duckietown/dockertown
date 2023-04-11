@@ -149,18 +149,23 @@ class Image(ReloadableObjectFromJson):
         """
         return ImageCLI(self.client_config).tag(self, new_tag)
 
-    def copy_from(self, path_in_image: ValidPath, destination: ValidPath):
+    def copy_from(
+        self, path_in_image: ValidPath, destination: ValidPath, pull: str = "missing"
+    ):
         """Copy a file from a docker image in the local filesystem.
 
         See the `docker.image.copy_from` command for information about the arguments.
         """
-        return ImageCLI(self.client_config).copy_from(self, path_in_image, destination)
+        return ImageCLI(self.client_config).copy_from(
+            self, path_in_image, destination, pull
+        )
 
     def copy_to(
         self,
         local_path: ValidPath,
         path_in_image: ValidPath,
         new_tag: Optional[str] = None,
+        pull: str = "missing",
     ) -> Image:
         """Copy a file from the local filesystem in a docker image to create a new
         docker image.
@@ -170,7 +175,7 @@ class Image(ReloadableObjectFromJson):
         See the `docker.image.copy_to` command for information about the arguments.
         """
         return ImageCLI(self.client_config).copy_to(
-            self, local_path, path_in_image, new_tag
+            self, local_path, path_in_image, new_tag, pull
         )
 
     def exists(self) -> bool:
@@ -258,7 +263,7 @@ class ImageCLI(DockerCLICaller):
 
         docker_image = ImageCLI(self.client_config)
         full_cmd.append(context_path)
-        image_id = run(full_cmd).strip()
+        image_id = run(full_cmd).splitlines()[-1].strip()
         return docker_image.inspect(image_id)
 
     def history(self):
@@ -657,11 +662,13 @@ class ImageCLI(DockerCLICaller):
             return self.pull(image)
 
     def copy_from(
-        self, image: ValidImage, path_in_image: ValidPath, destination: ValidPath
+        self,
+        image: ValidImage,
+        path_in_image: ValidPath,
+        destination: ValidPath,
+        pull: str = "missing",
     ):
-        with container_cli_wrapper.ContainerCLI(self.client_config).create(
-            image
-        ) as tmp_container:
+        with container_cli_wrapper.ContainerCLI(self.client_config).create(image, pull=pull) as tmp_container:
             tmp_container.copy_from(path_in_image, destination)
 
     def copy_to(
@@ -670,9 +677,10 @@ class ImageCLI(DockerCLICaller):
         local_path: ValidPath,
         path_in_image: ValidPath,
         new_tag: Optional[str] = None,
+        pull: str = "missing",
     ) -> Image:
         with container_cli_wrapper.ContainerCLI(self.client_config).create(
-            base_image
+            base_image, pull=pull
         ) as tmp_container:
             tmp_container.copy_to(local_path, path_in_image)
             return tmp_container.commit(tag=new_tag)

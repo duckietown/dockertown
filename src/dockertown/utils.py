@@ -77,13 +77,13 @@ class DockerCamelModel(pydantic.BaseModel):
 @overload
 def run(
     args: List[Any],
-    capture_stdout: bool = True,
-    capture_stderr: bool = True,
-    input: bytes = None,
-    return_stderr: Literal[True] = False,
-    env: Dict[str, str] = {},
-    tty: bool = False,
-    retry: int = 3,
+    capture_stdout: bool = ...,
+    capture_stderr: bool = ...,
+    input: bytes = ...,
+    return_stderr: Literal[True] = ...,
+    env: Dict[str, str] = ...,
+    tty: bool = ...,
+    retry: int = ...,
 ) -> Tuple[str, str]:
     ...
 
@@ -91,13 +91,13 @@ def run(
 @overload
 def run(
     args: List[Any],
-    capture_stdout: bool = True,
-    capture_stderr: bool = True,
-    input: bytes = None,
-    return_stderr: Literal[False] = False,
-    env: Dict[str, str] = {},
-    tty: bool = False,
-    retry: int = 3,
+    capture_stdout: bool = ...,
+    capture_stderr: bool = ...,
+    input: bytes = ...,
+    return_stderr: Literal[False] = ...,
+    env: Dict[str, str] = ...,
+    tty: bool = ...,
+    retry: int = ...,
 ) -> str:
     ...
 
@@ -106,7 +106,7 @@ def run(
     args: List[Any],
     capture_stdout: bool = True,
     capture_stderr: bool = True,
-    input: bytes = None,
+    input: Optional[bytes] = None,
     return_stderr: bool = False,
     env: Dict[str, str] = {},
     tty: bool = False,
@@ -355,3 +355,10 @@ def format_time_for_docker(time_object: Union[datetime, timedelta]) -> str:
         return time_object.strftime("%Y-%m-%dT%H:%M:%S")
     elif isinstance(time_object, timedelta):
         return f"{time_object.total_seconds()}s"
+
+
+def parse_ls_status_count(status_output, status) -> int:
+    try:
+        return int(status_output.split(status + "(")[1].split(")")[0])
+    except IndexError:
+        return 0

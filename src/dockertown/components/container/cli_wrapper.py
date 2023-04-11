@@ -171,6 +171,21 @@ class Container(ReloadableObjectFromJson):
     # --------------------------------------------------------------------
     # public methods
 
+    def attach(
+        self,
+        detach_keys: Optional[str] = None,
+        stdin: bool = True,
+        sig_proxy: bool = True,
+    ) -> None:
+        """Attach local standard input, output, and error streams to a running container.
+
+        Alias: `docker.attach(...)`
+
+        See the [`docker.container.attach`](../sub-commands/container.md#attach) command for
+        information about the arguments.
+        """
+        ContainerCLI(self.client_config).attach(self, detach_keys, not stdin, sig_proxy)
+
     def commit(
         self,
         tag: Optional[str] = None,
@@ -349,9 +364,35 @@ class ContainerCLI(DockerCLICaller):
         super().__init__(*args, **kwargs)
         self.remove = self.remove
 
-    def attach(self):
-        """Not yet implemented"""
-        raise NotImplementedError
+    def attach(
+        self,
+        container: ValidContainer,
+        detach_keys: Optional[str] = None,
+        stdin: bool = True,
+        sig_proxy: bool = True,
+    ) -> None:
+        """Attach local standard input, output, and error streams to a running container
+
+        Alias: `docker.attach(...)`
+
+        # Arguments
+            container: The running container to attach to
+            detach_keys: Override the key sequence for detaching a container
+            stdin: Attach STDIN
+            sig_proxy: Proxy all received signals to the process (default true)
+
+        # Raises
+            `python_on_whales.exceptions.NoSuchContainer` if the container does not exists.
+        """
+        self.inspect(container)
+
+        full_cmd = self.docker_cmd + ["attach"]
+        full_cmd.add_simple_arg("--detach-keys", detach_keys)
+        full_cmd.add_flag("--no-stdin", not stdin)
+        full_cmd.add_flag("--sig-proxy", sig_proxy)
+        full_cmd.append(container)
+
+        run(full_cmd, tty=True)
 
     def commit(
         self,
@@ -447,6 +488,7 @@ class ContainerCLI(DockerCLICaller):
         cap_add: List[str] = [],
         cap_drop: List[str] = [],
         cgroup_parent: Optional[str] = None,
+        cgroupns: Optional[str] = None,
         cidfile: Optional[ValidPath] = None,
         cpu_period: Optional[int] = None,
         cpu_quota: Optional[int] = None,
@@ -510,6 +552,7 @@ class ContainerCLI(DockerCLICaller):
         privileged: bool = False,
         publish: List[ValidPortMapping] = [],
         publish_all: bool = False,
+        pull: str = "missing",
         read_only: bool = False,
         restart: Optional[str] = None,
         remove: bool = False,
@@ -546,7 +589,13 @@ class ContainerCLI(DockerCLICaller):
 
         The arguments are the same as [`docker.run`](#run).
         """
-        image_cli_wrapper.ImageCLI(self.client_config)._pull_if_necessary(image)
+
+        image_cli = image_cli_wrapper.ImageCLI(self.client_config)
+        if pull == "missing":
+            image_cli._pull_if_necessary(image)
+        elif pull == "always":
+            image_cli.pull(image)
+
         full_cmd = self.docker_cmd + ["create"]
 
         add_hosts = [f"{host}:{ip}" for host, ip in add_hosts]
@@ -559,6 +608,7 @@ class ContainerCLI(DockerCLICaller):
         full_cmd.add_args_list("--cap-drop", cap_drop)
 
         full_cmd.add_simple_arg("--cgroup-parent", cgroup_parent)
+        full_cmd.add_simple_arg("--cgroupns", cgroupns)
         full_cmd.add_simple_arg("--cidfile", cidfile)
 
         full_cmd.add_simple_arg("--cpu-period", cpu_period)
@@ -652,6 +702,9 @@ class ContainerCLI(DockerCLICaller):
 
         self._add_publish_to_command(full_cmd, publish)
         full_cmd.add_flag("--publish-all", publish_all)
+
+        if pull == "never":
+            full_cmd.add_simple_arg("--pull", "never")
 
         full_cmd.add_flag("--read-only", read_only)
         full_cmd.add_simple_arg("--restart", restart)
@@ -767,6 +820,23 @@ class ContainerCLI(DockerCLICaller):
         # Raises
             `dockertown.exceptions.NoSuchContainer` if the container does not exists.
         """
+        if not isinstance(command, list):
+            error_message = (
+                "When calling docker.execute(), the second argument ('command') "
+                "should be a list. "
+                "Here are some examples:"
+                "docker.execute('somecontainer', ['ls']), "
+                "docker.execute('somecontainer', ['cat', '/some/file.txt'])"
+            )
+            if isinstance(command, str):
+                # boy this is the most common error in the world
+                if isinstance(container, str):
+                    container = self.inspect(container)
+                error_message += (
+                    f" In your case, command should not be a string. "
+                    f"You can try docker.execute('{container.name}', {command.split()}, ...)."
+                )
+            raise TypeError(error_message)
         full_cmd = self.docker_cmd + ["exec"]
 
         full_cmd.add_flag("--detach", detach)
@@ -872,7 +942,7 @@ class ContainerCLI(DockerCLICaller):
     def kill(
         self,
         containers: Union[ValidContainer, List[ValidContainer]],
-        signal: str = None,
+        signal: Optional[str] = None,
     ) -> None:
         """Kill a container.
 
@@ -1119,6 +1189,7 @@ class ContainerCLI(DockerCLICaller):
         cap_add: List[str] = [],
         cap_drop: List[str] = [],
         cgroup_parent: Optional[str] = None,
+        cgroupns: Optional[str] = None,
         cidfile: Optional[ValidPath] = None,
         cpu_period: Optional[int] = None,
         cpu_quota: Optional[int] = None,
@@ -1183,6 +1254,7 @@ class ContainerCLI(DockerCLICaller):
         privileged: bool = False,
         publish: List[ValidPortMapping] = [],
         publish_all: bool = False,
+        pull: str = "missing",
         read_only: bool = False,
         restart: Optional[str] = None,
         remove: bool = False,
@@ -1280,6 +1352,7 @@ class ContainerCLI(DockerCLICaller):
                 `add_hosts=[("my_host_1", "192.168.30.31"), ("host2", "192.168.80.81")]`
             blkio_weight: Block IO (relative weight), between 10 and 1000,
                 or 0 to disable (default 0)
+            cgroupns: Cgroup namespace mode to use, one of 'host' or 'private'.
             cpu_period: Limit CPU CFS (Completely Fair Scheduler) period
             cpu_quota: Limit CPU CFS (Completely Fair Scheduler) quota
             cpu_rt_period: Limit CPU real-time period in microseconds
@@ -1338,6 +1411,7 @@ class ContainerCLI(DockerCLICaller):
                 the tuple to signify that you want a random free port on the host. For example:
                 `publish=[(80,)]`.
             publish_all: Publish all exposed ports to random ports.
+            pull: Pull image before running ("always"|"missing"|"never") (default "missing").
             read_only: Mount the container's root filesystem as read only.
             restart: Restart policy to apply when a container exits (default "no")
             remove: Automatically remove the container when it exits.
@@ -1361,8 +1435,27 @@ class ContainerCLI(DockerCLICaller):
             The container output as a string if detach is `False` (the default),
             and a `dockertown.Container` if detach is `True`.
         """
+        if not isinstance(command, list):
+            error_message = (
+                "When calling docker.run(), the second argument ('command') "
+                "should be a list. "
+                "Here are some examples:"
+                "docker.run('ubuntu', ['ls']), "
+                "docker.run('ubuntu', ['cat', '/some/file.txt'])"
+            )
+            if isinstance(command, str):
+                # boy this is the most common error in the world
+                error_message += (
+                    f" In your case, command should not be a string. "
+                    f"You can try docker.run('{image}', {command.split()}, ...)."
+                )
+            raise TypeError(error_message)
 
-        image_cli_wrapper.ImageCLI(self.client_config)._pull_if_necessary(image)
+        image_cli = image_cli_wrapper.ImageCLI(self.client_config)
+        if pull == "missing":
+            image_cli._pull_if_necessary(image)
+        elif pull == "always":
+            image_cli.pull(image)
 
         full_cmd = self.docker_cmd + ["container", "run"]
 
@@ -1376,6 +1469,7 @@ class ContainerCLI(DockerCLICaller):
         full_cmd.add_args_list("--cap-drop", cap_drop)
 
         full_cmd.add_simple_arg("--cgroup-parent", cgroup_parent)
+        full_cmd.add_simple_arg("--cgroupns", cgroupns)
         full_cmd.add_simple_arg("--cidfile", cidfile)
 
         full_cmd.add_simple_arg("--cpu-period", cpu_period)
@@ -1472,6 +1566,9 @@ class ContainerCLI(DockerCLICaller):
 
         self._add_publish_to_command(full_cmd, publish)
         full_cmd.add_flag("--publish-all", publish_all)
+
+        if pull == "never":
+            full_cmd.add_simple_arg("--pull", "never")
 
         full_cmd.add_flag("--read-only", read_only)
         full_cmd.add_simple_arg("--restart", restart)

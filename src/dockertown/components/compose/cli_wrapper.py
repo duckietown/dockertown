@@ -5,10 +5,20 @@ from datetime import timedelta
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Union
 
-from ...client_config import DockerCLICaller
+from python_on_whales.client_config import DockerCLICaller
+from python_on_whales.components.compose.models import ComposeConfig, ComposeProject
+from python_on_whales.utils import (
+    format_dict_for_cli,
+    parse_ls_status_count,
+    run,
+    stream_stdout_and_stderr,
+    to_list,
+)
+from typing_extensions import Literal
+
+from .models import ComposeConfig
 from ...components.container import cli_wrapper as container_cli_wrapper
 from ...utils import format_dict_for_cli, run, stream_stdout_and_stderr, to_list
-from .models import ComposeConfig
 
 
 class ComposeCLI(DockerCLICaller):
@@ -284,7 +294,11 @@ class ComposeCLI(DockerCLICaller):
         run(full_cmd)
 
     def port(
-        self, service: str, private_port: str, index: int = 1, protocol: str = "tcp"
+        self,
+        service: str,
+        private_port: Union[str, int],
+        index: int = 1,
+        protocol: str = "tcp",
     ) -> Tuple[Optional[str], Optional[int]]:
         """Returns the public port for a port binding.
 
@@ -316,13 +330,20 @@ class ComposeCLI(DockerCLICaller):
         host, port = str(result).split(":")
         return host, int(port)
 
-    def ps(self) -> List[container_cli_wrapper.Container]:
+    def ps(
+            self,
+            services: Optional[List[str]] = None,
+            all: bool = False,
+    ) -> List[container_cli_wrapper.Container]:
         """Returns the containers that were created by the current project.
 
         # Returns
             A `List[dockertown.Container]`
         """
         full_cmd = self.docker_compose_cmd + ["ps", "--quiet"]
+        full_cmd.add_flag("--all", all)
+        if services:
+            full_cmd += services
         result = run(full_cmd)
         ids = result.splitlines()
         # The first line might be a warning for experimental
@@ -332,6 +353,41 @@ class ComposeCLI(DockerCLICaller):
 
         Container = container_cli_wrapper.Container
         return [Container(self.client_config, x, is_immutable_id=True) for x in ids]
+
+    def ls(
+        self, all: bool = False, filters: Dict[str, str] = {}
+    ) -> List[ComposeProject]:
+        """Returns a list of docker compose projects
+
+        # Arguments
+            all_stopped: Results include all stopped compose projects.
+            project_filters: Filter results based on conditions provided.
+
+        # Returns
+            A `List[python_on_whales.ComposeProject]`
+        """
+        full_cmd = self.docker_compose_cmd + ["ls", "--format", "json"]
+        full_cmd.add_flag("--all", all)
+        full_cmd.add_args_list("--filter", format_dict_for_cli(filters))
+
+        return [
+            ComposeProject(
+                name=proj["Name"],
+                created=parse_ls_status_count(proj["Status"], "created"),
+                running=parse_ls_status_count(proj["Status"], "running"),
+                restarting=parse_ls_status_count(proj["Status"], "restarting"),
+                exited=parse_ls_status_count(proj["Status"], "exited"),
+                paused=parse_ls_status_count(proj["Status"], "paused"),
+                dead=parse_ls_status_count(proj["Status"], "dead"),
+                config_files=[
+                    Path(path)
+                    for path in proj.get("ConfigFiles", "").split(",")
+                    if "ConfigFiles" in proj
+                ]
+                or None,
+            )
+            for proj in json.loads(run(full_cmd))
+        ]
 
     def pull(
         self,
@@ -445,7 +501,7 @@ class ComposeCLI(DockerCLICaller):
         detach: bool = False,
         # entrypoint: Optional[List[str]] = None,
         # envs: Dict[str, str] = {},
-        # labels: Dict[str, str] = {},
+        labels: Dict[str, str] = {},
         name: Optional[str] = None,
         tty: bool = True,
         stream: bool = False,
@@ -465,6 +521,7 @@ class ComposeCLI(DockerCLICaller):
             command: The command to execute.
             detach: if `True`, returns immediately with the Container.
                     If `False`, returns the command stdout as string.
+            labels: Add or override labels
             name: Assign a name to the container.
             dependencies: Also start linked services.
             publish: Publish a container's port(s) to the host.
@@ -517,6 +574,7 @@ class ComposeCLI(DockerCLICaller):
         full_cmd.add_flag("--use-aliases", use_aliases)
         full_cmd.add_simple_arg("--user", user)
         full_cmd.add_simple_arg("--workdir", workdir)
+        full_cmd.add_args_list("--label", format_dict_for_cli(labels))
         full_cmd.append(service)
         full_cmd += command
 
@@ -599,11 +657,15 @@ class ComposeCLI(DockerCLICaller):
         scales: Dict[str, int] = {},
         attach_dependencies: bool = False,
         force_recreate: bool = False,
+        recreate: bool = True,
         no_build: bool = False,
+        remove_orphans: bool = False,
         color: bool = True,
         log_prefix: bool = True,
         start: bool = True,
         quiet: bool = False,
+        wait: bool = False,
+        pull: Literal["always", "missing", "never", None] = None,
     ):
         """Start the containers.
 
@@ -628,12 +690,17 @@ class ComposeCLI(DockerCLICaller):
             attach_dependencies: Attach to dependent containers.
             force_recreate: Recreate containers even if their configuration and image
                 haven't changed.
+            recreate: Recreate the containers if already exist.
+                `recreate=False` and `force_recreate=True` are incompatible.
             no_build: Don't build an image, even if it's missing.
+            remove_orphans: Remove containers for services not defined in the Compose file.
             color: If `False`, it will produce monochrome output.
             log_prefix: If `False`, will not display the prefix in the logs.
             start: Start the service after creating them.
             quiet: By default, some progress bars and logs are sent to stderr and stdout.
                 Set `quiet=True` to avoid having any output.
+            wait: Wait for services to be running|healthy. Implies detached mode.
+            pull: Pull image before running (“always”|”missing”|”never”).
 
         # Returns
             `None` at the moment. The plan is to be able to capture and stream the logs later.
@@ -643,15 +710,19 @@ class ComposeCLI(DockerCLICaller):
         full_cmd = self.docker_compose_cmd + ["up"]
         full_cmd.add_flag("--build", build)
         full_cmd.add_flag("--detach", detach)
+        full_cmd.add_flag("--wait", wait)
         full_cmd.add_flag("--abort-on-container-exit", abort_on_container_exit)
         for service, scale in scales.items():
             full_cmd.add_simple_arg("--scale", f"{service}={scale}")
         full_cmd.add_flag("--attach-dependencies", attach_dependencies)
         full_cmd.add_flag("--force-recreate", force_recreate)
+        full_cmd.add_flag("--no-recreate", not recreate)
         full_cmd.add_flag("--no-build", no_build)
         full_cmd.add_flag("--no-color", not color)
         full_cmd.add_flag("--no-log-prefix", not log_prefix)
         full_cmd.add_flag("--no-start", not start)
+        full_cmd.add_flag("--remove-orphans", remove_orphans)
+        full_cmd.add_simple_arg("--pull", pull)
 
         if services == []:
             return

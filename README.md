@@ -12,6 +12,7 @@ The docs can be found at this address: <https://duckietown.github.io/dockertown/
 
 The GitHub repo can be found at this address: <https://github.com/duckietown/dockertown>
 
+------------------------------------------------------------------------
 
 ## How to install?
 
@@ -243,30 +244,6 @@ Some commands are only available in Dockertown
 too: `docker.buildx.build(...)`, `docker.stack.deploy(...)`...
 
 Use the right tool for the right job 🙂
-
-## Where is the project now? Where is it going?
-
-| sub-command  | Functions implemented  | Progress |
-|---|---|---|
-| buildx  | 10/11 | ![92%](https://progress-bar.dev/92) |
-| compose  | 18/23 | ![73%](https://progress-bar.dev/78) |
-| config  | 4/4 | ![50%](https://progress-bar.dev/100) |
-| container | 22/24 | ![50%](https://progress-bar.dev/91) |
-| context  | 4/6 | ![50%](https://progress-bar.dev/67) |
-| image  | 12/13 | ![50%](https://progress-bar.dev/92) |
-| manifest  | 0/4 | ![50%](https://progress-bar.dev/0) |
-| network  | 7/7 | ![100%](https://progress-bar.dev/100) |
-| node  | 7/7 | ![100%](https://progress-bar.dev/100) |
-| plugins  | 10/10 | ![50%](https://progress-bar.dev/100) |
-| secret  | 4/4 | ![100%](https://progress-bar.dev/100) |
-| service  | 7/9 | ![50%](https://progress-bar.dev/78) |
-| stack  | 5/5 | ![100%](https://progress-bar.dev/100) |
-| swarm  | 8/8 | ![100%](https://progress-bar.dev/100) |
-| system  | 3/4 | ![50%](https://progress-bar.dev/75) |
-| trust  | 0/3 | ![50%](https://progress-bar.dev/0) |
-| volume  | 7/7 | ![50%](https://progress-bar.dev/100) |
-
-Take those numbers with a grain of salt. The functions don't all need the same amount of work to be implemented.
 
 ## Alternatives to Docker: Podman, nerdctl...
 
