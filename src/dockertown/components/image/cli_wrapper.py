@@ -17,7 +17,7 @@ from ...utils import (
     stream_stdout_and_stderr,
     to_list,
 )
-from .models import ImageGraphDriver, ImageInspectResult, ImageRootFS
+from .models import ImageGraphDriver, ImageInspectResult, ImageRootFS, ImageHistoryLayer
 
 
 class Image(ReloadableObjectFromJson):
@@ -266,9 +266,14 @@ class ImageCLI(DockerCLICaller):
         image_id = run(full_cmd).splitlines()[-1].strip()
         return docker_image.inspect(image_id)
 
-    def history(self):
+    def history(self, x: str) -> List[ImageHistoryLayer]:
         """Not yet implemented"""
-        raise NotImplementedError
+        full_cmd = self.docker_cmd + ["history", "--no-trunc", "--format", "{{json .}}", x]
+        history: List[ImageHistoryLayer] = [
+            ImageHistoryLayer.parse_json(layer)
+            for layer in run(full_cmd).splitlines()
+        ]
+        return history
 
     def import_(
         self,

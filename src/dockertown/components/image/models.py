@@ -1,5 +1,8 @@
+import json
 from datetime import datetime
 from typing import Any, Dict, List
+
+import humanfriendly
 
 from ...components.container.models import ContainerConfig
 from ...utils import DockerCamelModel, all_fields_optional
@@ -48,3 +51,25 @@ class ImageInspectResult(DockerCamelModel):
     graph_driver: ImageGraphDriver
     root_fs: ImageRootFS
     metadata: Dict[str, str]
+
+
+@all_fields_optional
+class ImageHistoryLayer(DockerCamelModel):
+    id: str
+    created_at: datetime
+    created_by: str
+    created_since: str
+    comment: str
+    size: float
+
+    @staticmethod
+    def parse_json(json_str: str) -> 'ImageHistoryLayer':
+        d: dict = json.loads(json_str)
+        return ImageHistoryLayer(
+            id=d["ID"],
+            created_at=d["CreatedAt"],
+            created_by=d["CreatedBy"],
+            created_since=d["CreatedSince"],
+            comment=d["Comment"],
+            size=humanfriendly.parse_size(d["Size"]),
+        )
