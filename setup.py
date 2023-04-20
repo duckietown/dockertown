@@ -11,7 +11,7 @@ def get_long_description() -> str:
 
 setup(
     name="dockertown",
-    version="0.2.1",
+    version="0.2.2",
     description="A decent Python wrapper for Docker CLI",
     long_description=get_long_description(),
     long_description_content_type="text/markdown",
