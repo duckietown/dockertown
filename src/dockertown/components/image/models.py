@@ -1,8 +1,10 @@
 import json
 from datetime import datetime
-from typing import Any, Dict, List
+from enum import Enum
+from typing import Any, Dict, List, Optional
 
 import humanfriendly
+import pydantic
 
 from ...components.container.models import ContainerConfig
 from ...utils import DockerCamelModel, all_fields_optional
@@ -73,3 +75,28 @@ class ImageHistoryLayer(DockerCamelModel):
             comment=d["Comment"],
             size=humanfriendly.parse_size(d["Size"]),
         )
+
+
+class LayerPullStatus(Enum):
+    UNKNOWN = "unknown"
+    PULLING = "pulling fs layer"
+    WAITING = "waiting"
+    DOWNLOADING = "downloading"
+    DOWNLOADED = "download complete"
+    VERIFYING = "verifying checksum"
+    EXTRACTING = "extracting"
+    PULLED = "pull complete"
+    EXISTS = "already exists"
+
+    @classmethod
+    def from_string(cls, s: str) -> 'LayerPullStatus':
+        try:
+            return LayerPullStatus(s.lower().strip())
+        except Exception:
+            return LayerPullStatus.UNKNOWN
+
+
+class LayerPullProgress(pydantic.BaseModel):
+    layer_id: str
+    status: LayerPullStatus
+    progress: Optional[float] = None

@@ -186,6 +186,13 @@ def run(
                     completed_process.stdout,
                     completed_process.stderr,
                 )
+            if "manifest unknown" in completed_process.stderr.decode().lower():
+                raise NoSuchImage(
+                    args,
+                    completed_process.returncode,
+                    completed_process.stdout,
+                    completed_process.stderr,
+                )
             if (
                 "Temporary failure in name resolution"
                 in completed_process.stderr.decode().lower()
@@ -255,7 +262,7 @@ def removesuffix(string: str, suffix: str) -> str:
 
 def removeprefix(string: str, prefix: str) -> str:
     if string.startswith(prefix):
-        return string[len(prefix) :]
+        return string[len(prefix):]
     else:
         return string
 

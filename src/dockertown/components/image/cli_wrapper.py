@@ -1,10 +1,16 @@
 from __future__ import annotations
 
+import os
+import pty
+import re
+import subprocess
 from datetime import datetime
 from multiprocessing.pool import ThreadPool
 from pathlib import Path
 from subprocess import PIPE, Popen
-from typing import Any, Dict, Iterator, List, Optional, Union, overload
+from typing import Any, Dict, Iterator, List, Optional, Union, overload, Match
+
+import humanfriendly
 
 from ...client_config import ClientConfig, DockerCLICaller, ReloadableObjectFromJson
 from ...components.buildx import cli_wrapper as buildx_cli_wrapper
@@ -17,7 +23,8 @@ from ...utils import (
     stream_stdout_and_stderr,
     to_list,
 )
-from .models import ImageGraphDriver, ImageInspectResult, ImageRootFS, ImageHistoryLayer
+from .models import ImageGraphDriver, ImageInspectResult, ImageRootFS, ImageHistoryLayer, LayerPullStatus, \
+    LayerPullProgress
 
 
 class Image(ReloadableObjectFromJson):
@@ -485,6 +492,60 @@ class ImageCLI(DockerCLICaller):
             pool.close()
             pool.join()
             return all_images
+
+    def interactive_pull(self, x: str) -> Iterator[LayerPullProgress]:
+        full_cmd = list(map(str, self.docker_cmd)) + ["pull", x]
+
+        master, slave = pty.openpty()
+        p = subprocess.Popen(full_cmd, preexec_fn=os.setsid, stdin=slave, stdout=slave, stderr=slave)
+        os.close(slave)
+
+        ansi_escape = re.compile(rb'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+        layer_pattern = re.compile(rb"^([0-9a-f]{12}):\s(.*)$")
+        progress_pattern = re.compile(r"^(\d+(\.\d+)?[kMGT]?B)/(\d+(\.\d+)?[kMGT]?B)$")
+
+        buffer: bytes = b""
+
+        while p.poll() is None:
+            try:
+                chunk = os.read(master, 2048)
+            except OSError:
+                return
+            buffer += chunk
+
+            if b"manifest unknown" in buffer:
+                p.wait()
+                raise NoSuchImage(full_cmd, p.returncode, stderr=buffer)
+
+            buffer = ansi_escape.sub(b'', buffer)
+            buffer = buffer.replace(b"\r", b"\n")
+            lines = buffer.splitlines(keepends=True)
+
+            for line in lines[:-1]:
+                line = line.strip()
+                if len(line) > 1:
+                    # process line
+                    match = layer_pattern.match(line)
+                    if match:
+                        layer_id: str = match.group(1).decode("utf-8").strip()
+                        status_str: str = match.group(2).decode("utf-8").strip()
+                        progress: Optional[float] = None
+                        progress_info: Optional[Match] = progress_pattern.match(status_str.split(" ")[-1])
+                        if progress_info:
+                            progress_str: str = status_str.split(" ")[-1]
+                            status_str = status_str[:-len(progress_str)].strip()
+                            partial: float = humanfriendly.parse_size(progress_info.group(1))
+                            total: float = humanfriendly.parse_size(progress_info.group(3))
+                            progress: float = partial / total
+                        status: LayerPullStatus = LayerPullStatus.from_string(status_str)
+
+                        yield LayerPullProgress(
+                            layer_id=layer_id,
+                            status=status,
+                            progress=progress,
+                        )
+
+            buffer = lines[-1]
 
     def _pull_single_tag(self, image_name: str, quiet: bool):
         full_cmd = self.docker_cmd + ["image", "pull"]
