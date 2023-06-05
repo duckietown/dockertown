@@ -313,7 +313,7 @@ def stream_stdout_and_stderr(
         raise DockerException(full_cmd, exit_code, stderr=full_stderr)
 
 
-def format_dict_for_cli(dictionary: Dict[str, str], separator="="):
+def format_dict_for_cli(dictionary: Dict[str, str], separator="=") -> List[str]:
     return [f"{key}{separator}{value}" for key, value in dictionary.items()]
 
 
