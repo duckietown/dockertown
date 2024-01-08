@@ -573,6 +573,7 @@ class ContainerCLI(DockerCLICaller):
         volume_driver: Optional[str] = None,
         volumes_from: List[ValidContainer] = [],
         workdir: Optional[ValidPath] = None,
+        x_passthrough_args: List[str] = [],
     ) -> Container:
         """Creates a container, but does not start it.
 
@@ -736,6 +737,8 @@ class ContainerCLI(DockerCLICaller):
         full_cmd.add_args_list("--volumes-from", volumes_from)
 
         full_cmd.add_simple_arg("--workdir", workdir)
+
+        full_cmd += x_passthrough_args
 
         full_cmd.append(image)
         full_cmd += command
@@ -1277,6 +1280,7 @@ class ContainerCLI(DockerCLICaller):
         volume_driver: Optional[str] = None,
         volumes_from: List[ValidContainer] = [],
         workdir: Optional[ValidPath] = None,
+        x_passthrough_args: List[str] = [],
     ) -> Union[Container, str, Iterable[Tuple[str, bytes]]]:
         """Runs a container
 
@@ -1600,6 +1604,8 @@ class ContainerCLI(DockerCLICaller):
         full_cmd.add_args_list("--volumes-from", volumes_from)
 
         full_cmd.add_simple_arg("--workdir", workdir)
+
+        full_cmd += x_passthrough_args
 
         full_cmd.append(image)
         full_cmd += command
