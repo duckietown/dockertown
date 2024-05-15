@@ -1,8 +1,9 @@
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Union
 
 import pydantic
+from pydantic import validator
 
 from ...components.node import models
 from ...utils import DockerCamelModel, all_fields_optional
@@ -222,3 +223,9 @@ class SystemInfo(DockerCamelModel):
     product_license: str
     warnings: List[str]
     client_info: ClientInfo
+
+    @validator('labels', pre=True)
+    def parse_labels(cls, value: Union[List[str], Dict[str, str]]) -> Dict[str, str]:
+        if isinstance(value, dict):
+            return value
+        return {kv.split("=", maxsplit=1)[0]: kv.split("=", maxsplit=1)[1] for kv in value}
