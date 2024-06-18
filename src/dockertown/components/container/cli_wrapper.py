@@ -273,14 +273,16 @@ class Container(ReloadableObjectFromJson):
         tail: Optional[int] = None,
         timestamps: bool = False,
         until: Union[None, datetime, timedelta] = None,
-    ) -> str:
+        follow: bool = False,
+        stream: bool = False,
+    ) -> Union[str, Iterable[Tuple[str, bytes]]]:
         """Returns the logs of the container
 
         See the [`docker.container.logs`](../sub-commands/container.md#logs) command for
         information about the arguments.
         """
         return ContainerCLI(self.client_config).logs(
-            self, details, since, tail, timestamps, until
+            self, details, since, tail, timestamps, until, follow, stream
         )
 
     def pause(self) -> None:
