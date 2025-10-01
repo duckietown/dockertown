@@ -40,7 +40,7 @@ class Service(ReloadableObjectFromJson):
         return run(self.docker_cmd + ["service", "inspect", reference])
 
     def _parse_json_object(self, json_object: Dict[str, Any]) -> ServiceInspectResult:
-        return ServiceInspectResult.parse_obj(json_object)
+        return ServiceInspectResult.model_validate(json_object)
 
     def _get_inspect_result(self) -> ServiceInspectResult:
         """Only there to allow tools to know the return type"""

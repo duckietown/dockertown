@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Union
 
 import pydantic
-from pydantic import validator
+from pydantic import field_validator
 
 from ...components.node import models
 from ...utils import DockerCamelModel, all_fields_optional
@@ -27,9 +27,9 @@ class DockerEvent(DockerCamelModel):
 @all_fields_optional
 class DockerItemsSummary(DockerCamelModel):
     active: int
-    reclaimable: pydantic.ByteSize
+    reclaimable: int
     reclaimable_percent: float
-    size: pydantic.ByteSize
+    size: int
     total_count: int
 
 
@@ -224,7 +224,8 @@ class SystemInfo(DockerCamelModel):
     warnings: List[str]
     client_info: ClientInfo
 
-    @validator('labels', pre=True)
+    @field_validator('labels', mode='before')
+    @classmethod
     def parse_labels(cls, value: Union[List[str], Dict[str, str]]) -> Dict[str, str]:
         if isinstance(value, dict):
             return value

@@ -2,11 +2,10 @@ from __future__ import annotations
 
 import inspect
 import json
+import re
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Union, overload
-
-import pydantic
 
 from ...client_config import ClientConfig, DockerCLICaller, ReloadableObjectFromJson
 from ...components.image import cli_wrapper as image_cli_wrapper
@@ -53,7 +52,7 @@ class Container(ReloadableObjectFromJson):
         return run(self.docker_cmd + ["container", "inspect", reference])
 
     def _parse_json_object(self, json_object: Dict[str, Any]):
-        return ContainerInspectResult.parse_obj(json_object)
+        return ContainerInspectResult.model_validate(json_object)
 
     def _get_inspect_result(self) -> ContainerInspectResult:
         """Only there to allow tools to know the return type"""
@@ -1915,33 +1914,72 @@ class ContainerStats:
         """Takes a json_dict with container stats from the CLI and
         parses it.
         """
-        self.block_read: int = pydantic.parse_obj_as(
-            pydantic.ByteSize, json_dict["BlockIO"].split("/")[0]
-        )
-        self.block_write: int = pydantic.parse_obj_as(
-            pydantic.ByteSize, json_dict["BlockIO"].split("/")[1]
-        )
+        self.block_read: int = parse_byte_size(json_dict["BlockIO"].split("/")[0])
+        self.block_write: int = parse_byte_size(json_dict["BlockIO"].split("/")[1])
         self.cpu_percentage: float = float(json_dict["CPUPerc"][:-1])
         self.container: str = json_dict["Container"]
         self.container_id: str = json_dict["ID"]
         self.memory_percentage: float = float(json_dict["MemPerc"][:-1])
-        self.memory_used: int = pydantic.parse_obj_as(
-            pydantic.ByteSize, json_dict["MemUsage"].split("/")[0]
-        )
-        self.memory_limit: int = pydantic.parse_obj_as(
-            pydantic.ByteSize, json_dict["MemUsage"].split("/")[1]
-        )
+        self.memory_used: int = parse_byte_size(json_dict["MemUsage"].split("/")[0])
+        self.memory_limit: int = parse_byte_size(json_dict["MemUsage"].split("/")[1])
         self.container_name: str = json_dict["Name"]
-        self.net_upload: int = pydantic.parse_obj_as(
-            pydantic.ByteSize, json_dict["NetIO"].split("/")[0]
-        )
-        self.net_download: int = pydantic.parse_obj_as(
-            pydantic.ByteSize, json_dict["NetIO"].split("/")[1]
-        )
+        self.net_upload: int = parse_byte_size(json_dict["NetIO"].split("/")[0])
+        self.net_download: int = parse_byte_size(json_dict["NetIO"].split("/")[1])
 
     def __repr__(self):
         attr = ", ".join(f"{key}={value}" for key, value in self.__dict__.items())
         return f"<{self.__class__} object, attributes are {attr}>"
+
+
+def parse_byte_size(size_str: str) -> int:
+    """Parse a byte size string like '1.5GiB', '512MiB', '2kB' to bytes.
+
+    This replaces the removed pydantic.ByteSize functionality in Pydantic v2.
+    """
+    size_str = size_str.strip()
+
+    # Handle special cases
+    if size_str == "0" or size_str == "0B":
+        return 0
+
+    # Parse the number and unit
+    match = re.match(r"^([\d.]+)\s*([A-Za-z]*)", size_str)
+    if not match:
+        raise ValueError(f"Invalid byte size format: {size_str}")
+
+    number = float(match.group(1))
+    unit = match.group(2).strip()
+
+    # Define multipliers (both SI and IEC units)
+    multipliers = {
+        "": 1,
+        "B": 1,
+        "kB": 1000,
+        "KB": 1000,
+        "k": 1000,
+        "K": 1000,
+        "MB": 1000**2,
+        "M": 1000**2,
+        "GB": 1000**3,
+        "G": 1000**3,
+        "TB": 1000**4,
+        "T": 1000**4,
+        "PB": 1000**5,
+        "P": 1000**5,
+        "KiB": 1024,
+        "Ki": 1024,
+        "MiB": 1024**2,
+        "Mi": 1024**2,
+        "GiB": 1024**3,
+        "Gi": 1024**3,
+        "TiB": 1024**4,
+        "Ti": 1024**4,
+        "PiB": 1024**5,
+        "Pi": 1024**5,
+    }
+
+    multiplier = multipliers.get(unit, 1)
+    return int(number * multiplier)
 
 
 def join_if_not_none(sequence: Optional[list]) -> Optional[str]:
