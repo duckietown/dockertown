@@ -472,9 +472,11 @@ def test_compose_down_volumes():
 
 
 def test_compose_config_from_rc1():
-    config = ComposeConfig.parse_file(
-        Path(__file__).parent / "strange_compose_config_rc1.json"
-    )
+    with open(Path(__file__).parent / "strange_compose_config_rc1.json") as f:
+        import json
+
+        data = json.load(f)
+    config = ComposeConfig.model_validate(data)
 
     assert config.services["myservice"].deploy.resources.reservations.cpus == "'0.25'"
 
@@ -482,7 +484,7 @@ def test_compose_config_from_rc1():
 @pytest.mark.parametrize("json_file", get_all_jsons("compose"))
 def test_load_json(json_file):
     json_as_txt = json_file.read_text()
-    config: ComposeConfig = ComposeConfig.parse_raw(json_as_txt)
+    config: ComposeConfig = ComposeConfig.model_validate_json(json_as_txt)
     if json_file.name == "0.json":
         assert config.services["traefik"].labels["traefik.enable"] == "true"
 

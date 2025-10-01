@@ -8,7 +8,7 @@ from dockertown.test_utils import get_all_jsons
 @pytest.mark.parametrize("json_file", get_all_jsons("nodes"))
 def test_load_json(json_file):
     json_as_txt = json_file.read_text()
-    a: NodeInspectResult = NodeInspectResult.parse_raw(json_as_txt)
+    a: NodeInspectResult = NodeInspectResult.model_validate_json(json_as_txt)
     if json_file.name == "1.json":
         assert (
             a.description.resources.generic_resources[0].named_resource_spec.kind

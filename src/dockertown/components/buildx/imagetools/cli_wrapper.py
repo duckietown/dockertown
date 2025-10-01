@@ -18,7 +18,7 @@ class ImagetoolsCLI(DockerCLICaller):
             if "ERROR" in e.stderr and "not found" in e.stderr:
                 return None
             raise e
-        return Manifest.parse_raw(result)
+        return Manifest.model_validate_json(result)
 
     def create(
         self,
@@ -70,4 +70,4 @@ class ImagetoolsCLI(DockerCLICaller):
 
         result = run(full_cmd)
         if dry_run:
-            return Manifest.parse_raw(result)
+            return Manifest.model_validate_json(result)

@@ -12,7 +12,7 @@ from dockertown.test_utils import get_all_jsons
 @pytest.mark.parametrize("json_file", get_all_jsons("volumes"))
 def test_load_json(json_file):
     json_as_txt = json_file.read_text()
-    a = VolumeInspectResult.parse_raw(json_as_txt)
+    a = VolumeInspectResult.model_validate_json(json_as_txt)
     if json_file.name == "0.json":
         assert a.created_at == datetime(
             year=2020,

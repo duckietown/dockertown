@@ -22,7 +22,7 @@ from dockertown.test_utils import get_all_jsons, random_name
 @pytest.mark.parametrize("json_file", get_all_jsons("containers"))
 def test_load_json(json_file):
     json_as_txt = json_file.read_text()
-    ContainerInspectResult.parse_raw(json_as_txt)
+    ContainerInspectResult.model_validate_json(json_as_txt)
     # we could do more checks here if needed
 
 
@@ -303,7 +303,7 @@ json_state = """
 
 
 def test_container_state():
-    a = ContainerState.parse_raw(json_state)
+    a = ContainerState.model_validate_json(json_state)
 
     assert a.status == "running"
     assert a.running
