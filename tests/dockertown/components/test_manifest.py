@@ -22,7 +22,7 @@ def with_manifest():
 @pytest.mark.parametrize("json_file", get_all_jsons("manifests"))
 def test_load_json(json_file):
     json_as_txt = json_file.read_text()
-    ManifestListInspectResult.parse_raw(json_as_txt)
+    ManifestListInspectResult.model_validate_json(json_as_txt)
     # we could do more checks here if needed
 
 

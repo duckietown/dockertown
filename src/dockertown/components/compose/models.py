@@ -128,4 +128,4 @@ class ComposeProject(BaseModel):
     exited: int = 0
     paused: int = 0
     dead: int = 0
-    config_files: Optional[List[Path]]
+    config_files: Optional[List[Path]] = None

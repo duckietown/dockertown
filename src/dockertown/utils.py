@@ -9,6 +9,7 @@ from threading import Thread
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Union, overload
 
 import pydantic
+from pydantic import ConfigDict
 from typing_extensions import Literal
 
 from .exceptions import (
@@ -69,9 +70,10 @@ def to_docker_camel(string):
 
 
 class DockerCamelModel(pydantic.BaseModel):
-    class Config:
-        alias_generator = to_docker_camel
-        allow_population_by_field_name = True
+    model_config = ConfigDict(
+        alias_generator=to_docker_camel,
+        populate_by_name=True,
+    )
 
 
 @overload
@@ -262,7 +264,7 @@ def removesuffix(string: str, suffix: str) -> str:
 
 def removeprefix(string: str, prefix: str) -> str:
     if string.startswith(prefix):
-        return string[len(prefix):]
+        return string[len(prefix) :]
     else:
         return string
 
@@ -344,9 +346,28 @@ def read_env_files(env_files: List[Path]) -> Dict[str, str]:
 
 def all_fields_optional(cls):
     """Decorator function used to modify a pydantic model's fields to all be optional."""
-    for field in cls.__fields__.values():
-        field.required = False
-        field.allow_none = True
+    from typing import get_origin, get_args
+
+    # Make a copy of model_fields to avoid modifying during iteration
+    for field_name, field_info in list(cls.model_fields.items()):
+        # Get the original annotation
+        annotation = field_info.annotation
+
+        # Check if it's already Optional (Union with None)
+        origin = get_origin(annotation)
+        if origin is Union:
+            args = get_args(annotation)
+            if type(None) in args:
+                # Already optional, just set default
+                field_info.default = None
+                continue
+
+        # Make it optional
+        field_info.annotation = Optional[annotation] if annotation else None
+        field_info.default = None
+
+    # Rebuild the model to apply changes
+    cls.model_rebuild(force=True)
     return cls
 
 
