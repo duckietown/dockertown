@@ -186,7 +186,7 @@ class BuildxCLI(DockerCLICaller):
         env = dict(variables)
         if print:
             if stream_logs:
-                ValueError(
+                raise ValueError(
                     "Getting the config of the bake and streaming "
                     "logs at the same time is not possible."
                 )
