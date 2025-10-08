@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import List, Optional
 
 import pydantic
+from dockertown.utils import DockerCamelModel
 
 
 class ManifestConfig(pydantic.BaseModel):
@@ -17,11 +18,11 @@ class ManifestLayer(pydantic.BaseModel):
     size: Optional[int]
 
 
-class ManifestPlatform(pydantic.BaseModel):
-    architecture: Optional[str]
-    os: Optional[str]
-    os_version: Optional[str]
-    variant: Optional[str]
+class ManifestPlatform(DockerCamelModel):
+    architecture: Optional[str] = pydantic.Field(default=None)
+    os: Optional[str] = pydantic.Field(default=None)
+    os_version: Optional[str] = pydantic.Field(default=None)
+    variant: Optional[str] = pydantic.Field(default=None)
 
     def as_string(self) -> str:
         parts = []

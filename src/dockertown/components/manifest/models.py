@@ -1,12 +1,11 @@
-from typing import List
+from typing import List, Optional
 
 from dockertown.components.buildx.imagetools.models import ImageVariantManifest
-from dockertown.utils import DockerCamelModel, all_fields_optional
+from dockertown.utils import DockerCamelModel
 
 
-@all_fields_optional
 class ManifestListInspectResult(DockerCamelModel):
-    name: str
-    schema_version: int
-    media_type: str
-    manifests: List[ImageVariantManifest]
+    name: Optional[str] = None
+    schema_version: Optional[int] = None  
+    media_type: Optional[str] = None
+    manifests: Optional[List[ImageVariantManifest]] = None
