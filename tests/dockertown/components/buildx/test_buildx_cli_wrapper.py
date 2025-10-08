@@ -545,6 +545,16 @@ def test_bake_stream_logs(monkeypatch):
     assert output[-1].startswith("#")
 
 
+@pytest.mark.usefixtures("with_docker_driver")
+@pytest.mark.usefixtures("change_cwd")
+def test_bake_print_and_stream_logs_raises_error():
+    # Test that using both print=True and stream_logs=True raises ValueError
+    with pytest.raises(
+        ValueError, match="Getting the config of the bake and streaming"
+    ):
+        docker.buildx.bake(files=[bake_file], print=True, stream_logs=True)
+
+
 def test_prune():
     docker.buildx.prune(filters=dict(until="3m"))
 
