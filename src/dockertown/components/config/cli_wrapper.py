@@ -22,7 +22,7 @@ class Config(ReloadableObjectFromJson):
         self.remove()
 
     def _fetch_inspect_result_json(self, reference):
-        return run(self.docker_cmd + ["config", "inspect", reference])
+        return run(self.docker_cmd + ["config", "inspect", reference], env=self.env)
 
     def _parse_json_object(self, json_object: Dict[str, Any]):
         return ConfigInspectResult.model_validate(json_object)

@@ -226,7 +226,9 @@ class SystemInfo(DockerCamelModel):
 
     @field_validator('labels', mode='before')
     @classmethod
-    def parse_labels(cls, value: Union[List[str], Dict[str, str]]) -> Dict[str, str]:
+    def parse_labels(cls, value: Union[List[str], Dict[str, str], None]) -> Dict[str, str]:
+        if value is None:
+            return {}
         if isinstance(value, dict):
             return value
         return {kv.split("=", maxsplit=1)[0]: kv.split("=", maxsplit=1)[1] for kv in value}

@@ -22,7 +22,7 @@ class Task(ReloadableObjectFromJson):
         super().__init__(client_config, "id", reference, is_immutable_id)
 
     def _fetch_inspect_result_json(self, reference):
-        return run(self.docker_cmd + ["inspect", reference])
+        return run(self.docker_cmd + ["inspect", reference], env=self.env)
 
     def _parse_json_object(self, json_object: Dict[str, Any]) -> TaskInspectResult:
         return TaskInspectResult.model_validate(json_object)

@@ -29,7 +29,7 @@ class Volume(ReloadableObjectFromJson):
         self.remove()
 
     def _fetch_inspect_result_json(self, reference):
-        return run(self.docker_cmd + ["volume", "inspect", reference])
+        return run(self.docker_cmd + ["volume", "inspect", reference], env=self.env)
 
     def _parse_json_object(self, json_object: Dict[str, Any]):
         return VolumeInspectResult.model_validate(json_object)

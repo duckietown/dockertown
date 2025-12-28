@@ -37,7 +37,7 @@ class Service(ReloadableObjectFromJson):
         self.remove()
 
     def _fetch_inspect_result_json(self, reference):
-        return run(self.docker_cmd + ["service", "inspect", reference])
+        return run(self.docker_cmd + ["service", "inspect", reference], env=self.env)
 
     def _parse_json_object(self, json_object: Dict[str, Any]) -> ServiceInspectResult:
         return ServiceInspectResult.model_validate(json_object)

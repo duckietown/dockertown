@@ -78,6 +78,7 @@ class DockerClient(DockerCLICaller):
             program execution).
         client_binary: Deprecated, use `client_call`. If you used before `client_binary="podman"`, now use
             `client_call=["podman"]`.
+        api_version: Docker API version to use (e.g., "1.41"). Sets the DOCKER_API_VERSION environment variable.
     """
 
     def __init__(
@@ -100,6 +101,7 @@ class DockerClient(DockerCLICaller):
         compose_project_directory: Optional[ValidPath] = None,
         compose_compatibility: Optional[bool] = None,
         client_call: List[str] = ["docker"],
+        api_version: str = "1.41",
     ):
         if client_config is None:
             client_config = ClientConfig(
@@ -120,6 +122,7 @@ class DockerClient(DockerCLICaller):
                 compose_project_directory=compose_project_directory,
                 compose_compatibility=compose_compatibility,
                 client_call=client_call,
+                api_version=api_version,
             )
         super().__init__(client_config)
 
@@ -186,7 +189,7 @@ class DockerClient(DockerCLICaller):
         :return: dictionary containing the raw output of `docker version`
         """
         full_cmd = self.docker_cmd + ["version", "--format", "{{json .}}"]
-        version_str = run(full_cmd, capture_stderr=False, capture_stdout=True)
+        version_str = run(full_cmd, capture_stderr=False, capture_stdout=True, env=self.env)
         return json.loads(version_str)
 
     def login(
@@ -212,7 +215,7 @@ class DockerClient(DockerCLICaller):
         if server is not None:
             full_cmd.append(server)
 
-        run(full_cmd, capture_stderr=False, capture_stdout=False)
+        run(full_cmd, capture_stderr=False, capture_stdout=False, env=self.env)
 
     def logout(self, server: Optional[str] = None):
         """Logout from a Docker registry
@@ -226,7 +229,7 @@ class DockerClient(DockerCLICaller):
         if server is not None:
             full_cmd.append(server)
 
-        run(full_cmd, capture_stdout=False, capture_stderr=False)
+        run(full_cmd, capture_stdout=False, capture_stderr=False, env=self.env)
 
     def login_ecr(
         self,
