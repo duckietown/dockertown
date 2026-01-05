@@ -60,6 +60,7 @@ class ClientConfig:
     compose_project_directory: Optional[ValidPath] = None
     compose_compatibility: Optional[bool] = None
     client_call: List[str] = field(default_factory=lambda: ["docker"])
+    api_version: Optional[str] = None
     _client_call_with_path: Optional[List[Union[Path, str]]] = None
 
     def get_client_call_with_path(self) -> List[Union[Path, str]]:
@@ -158,6 +159,14 @@ class DockerCLICaller:
     @property
     def docker_compose_cmd(self) -> Command:
         return self.client_config.docker_compose_cmd
+
+    @property
+    def env(self) -> Dict[str, str]:
+        """Returns environment variables to be used with Docker commands."""
+        env_vars = {}
+        if self.client_config.api_version is not None:
+            env_vars["DOCKER_API_VERSION"] = self.client_config.api_version
+        return env_vars
 
 
 class ReloadableObject(DockerCLICaller):
@@ -258,6 +267,6 @@ def bulk_reload(docker_objects: List[ReloadableObjectFromJson]):
     assert len(set(x.client_config for x in docker_objects)) == 1
     all_ids = [x._get_immutable_id() for x in docker_objects]
     full_cmd = docker_objects[0].docker_cmd + ["inspect"] + all_ids
-    json_str = run(full_cmd)
+    json_str = run(full_cmd, env=docker_objects[0].env)
     for json_obj, docker_object in zip(json.loads(json_str), docker_objects):
         docker_object._set_inspect_result(docker_object._parse_json_object(json_obj))

@@ -40,7 +40,7 @@ class Image(ReloadableObjectFromJson):
         self.remove(force=True)
 
     def _fetch_inspect_result_json(self, reference):
-        return run(self.docker_cmd + ["image", "inspect", reference])
+        return run(self.docker_cmd + ["image", "inspect", reference], env=self.env)
 
     def _parse_json_object(self, json_object: Dict[str, Any]) -> ImageInspectResult:
         return ImageInspectResult.model_validate(json_object)
@@ -270,7 +270,7 @@ class ImageCLI(DockerCLICaller):
 
         docker_image = ImageCLI(self.client_config)
         full_cmd.append(context_path)
-        image_id = run(full_cmd).splitlines()[-1].strip()
+        image_id = run(full_cmd, env=self.env).splitlines()[-1].strip()
         return docker_image.inspect(image_id)
 
     def history(self, x: str) -> List[ImageHistoryLayer]:
@@ -278,7 +278,7 @@ class ImageCLI(DockerCLICaller):
         full_cmd = self.docker_cmd + ["history", "--no-trunc", "--format", "{{json .}}", x]
         history: List[ImageHistoryLayer] = [
             ImageHistoryLayer.parse_json(layer)
-            for layer in run(full_cmd).splitlines()
+            for layer in run(full_cmd, env=self.env).splitlines()
         ]
         return history
 
@@ -306,7 +306,7 @@ class ImageCLI(DockerCLICaller):
         full_cmd.append(source)
         if tag is not None:
             full_cmd.append(tag)
-        return Image(self.client_config, run(full_cmd))
+        return Image(self.client_config, run(full_cmd, env=self.env))
 
     @overload
     def inspect(self, x: str) -> Image:
@@ -438,7 +438,7 @@ class ImageCLI(DockerCLICaller):
         if repository_or_tag is not None:
             full_cmd.append(repository_or_tag)
 
-        ids = run(full_cmd).splitlines()
+        ids = run(full_cmd, env=self.env).splitlines()
         # the list of tags is bigger than the number of images. We uniquify
         ids = set(ids)
 
@@ -457,7 +457,7 @@ class ImageCLI(DockerCLICaller):
         full_cmd = self.docker_cmd + ["image", "prune", "--force"]
         full_cmd.add_flag("--all", all)
         full_cmd.add_args_list("--filter", format_dict_for_cli(filter))
-        return run(full_cmd)
+        return run(full_cmd, env=self.env)
 
     def pull(
         self, x: Union[str, List[str]], quiet: bool = False
@@ -554,7 +554,7 @@ class ImageCLI(DockerCLICaller):
             full_cmd.append("--quiet")
 
         full_cmd.append(image_name)
-        run(full_cmd, capture_stdout=quiet, capture_stderr=quiet)
+        run(full_cmd, capture_stdout=quiet, capture_stderr=quiet, env=self.env)
         return Image(self.client_config, image_name)
 
     def push(self, x: Union[str, List[str]], quiet: bool = False):
@@ -596,7 +596,7 @@ class ImageCLI(DockerCLICaller):
         full_cmd = self.docker_cmd + ["image", "push"]
 
         full_cmd.append(tag_or_repo)
-        run(full_cmd, capture_stdout=quiet, capture_stderr=quiet)
+        run(full_cmd, capture_stdout=quiet, capture_stderr=quiet, env=self.env)
 
     def remove(
         self,
@@ -625,7 +625,7 @@ class ImageCLI(DockerCLICaller):
         for image in to_list(x):
             full_cmd.append(image)
 
-        run(full_cmd)
+        run(full_cmd, env=self.env)
 
     def save(
         self,
@@ -683,7 +683,7 @@ class ImageCLI(DockerCLICaller):
             # we stream the bytes
             return self._save_generator(full_cmd)
         else:
-            run(full_cmd)
+            run(full_cmd, env=self.env)
 
     def _save_generator(self, full_cmd) -> Iterator[bytes]:
         full_cmd = [str(x) for x in full_cmd]
@@ -715,7 +715,7 @@ class ImageCLI(DockerCLICaller):
             str(source_image),
             new_tag,
         ]
-        run(full_cmd)
+        run(full_cmd, env=self.env)
 
     def _pull_if_necessary(self, image: ValidImage) -> Image:
         if isinstance(image, Image):

@@ -28,7 +28,7 @@ class Context(ReloadableObjectFromJson):
         full_cmd = self.docker_cmd + ["context", "inspect"]
         if reference is not None:
             full_cmd.append(reference)
-        return run(full_cmd)
+        return run(full_cmd, env=self.env)
 
     def _parse_json_object(self, json_object: Dict[str, Any]):
         return ContextInspectResult.model_validate(json_object)

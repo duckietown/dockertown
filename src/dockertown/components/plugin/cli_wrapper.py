@@ -20,7 +20,7 @@ class Plugin(ReloadableObjectFromJson):
         self.remove(force=True)
 
     def _fetch_inspect_result_json(self, reference):
-        return run(self.docker_cmd + ["plugin", "inspect", reference])
+        return run(self.docker_cmd + ["plugin", "inspect", reference], env=self.env)
 
     def _parse_json_object(self, json_object: Dict[str, Any]) -> PluginInspectResult:
         return PluginInspectResult.model_validate(json_object)

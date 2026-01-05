@@ -49,7 +49,7 @@ class Container(ReloadableObjectFromJson):
             self.remove(volumes=True)
 
     def _fetch_inspect_result_json(self, reference):
-        return run(self.docker_cmd + ["container", "inspect", reference])
+        return run(self.docker_cmd + ["container", "inspect", reference], env=self.env)
 
     def _parse_json_object(self, json_object: Dict[str, Any]):
         return ContainerInspectResult.model_validate(json_object)

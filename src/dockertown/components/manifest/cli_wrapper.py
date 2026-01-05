@@ -20,7 +20,7 @@ class ManifestList(ReloadableObjectFromJson):
         self.remove()
 
     def _fetch_inspect_result_json(self, reference):
-        return f'[{run(self.docker_cmd + ["manifest", "inspect", reference])}]'
+        return f'[{run(self.docker_cmd + ["manifest", "inspect", reference], env=self.env)}]'
 
     def _parse_json_object(
         self, json_object: Dict[str, Any]
